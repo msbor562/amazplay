@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmazPlay - منصة الفيديو والترفيه</title>
+<meta name="description" content="AmazPlay منصة لمشاركة الفيديوهات والأخبار والرياضة والترفيه.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c1020;color:#fff;font-family:Arial,sans-serif}
+header{background:#151b30;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-size:27px;font-weight:bold;color:#9b7cff}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{color:#ddd;text-decoration:none}
+nav a:hover{color:#a58aff}
+button{border:0;border-radius:9px;padding:11px 17px;background:#7955e8;color:white;font-weight:bold;cursor:pointer}
+.secondary{background:#252e49}
+.search{padding:12px;border-radius:10px;border:1px solid #39415b;background:#202941;color:white;width:100%;max-width:340px}
+.hero{margin:25px auto;padding:45px 25px;max-width:1200px;border-radius:18px;background:linear-gradient(120deg,#38216f,#182b55);text-align:center}
+.hero h1{font-size:36px;margin:0 0 12px}
+.hero p{color:#e1dcf5;font-size:17px}
+.section{max-width:1200px;margin:30px auto;padding:0 18px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.filters button{background:#202941}
+.filters button.active{background:#7955e8}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.video{background:#171e32;border-radius:13px;overflow:hidden}
+.thumb{height:145px;background:linear-gradient(135deg,#38216f,#24628a);display:flex;align-items:center;justify-content:center;font-size:45px}
+.video-info{padding:14px}
+.video-info h3{margin:0 0 9px;font-size:17px}
+.video-info p{color:#aeb8d0;font-size:13px}
+footer{text-align:center;padding:30px;color:#aeb8d0;border-top:1px solid #27304a;margin-top:40px}
+@media(max-width:600px){.hero h1{font-size:27px}header{justify-content:center}nav{justify-content:center}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">▶ AmazPlay</div>
+  <nav>
+    <a href="#" data-ar="الرئيسية" data-fr="Accueil" data-en="Home">الرئيسية</a>
+    <a href="#videos" data-ar="الفيديوهات" data-fr="Vidéos" data-en="Videos">الفيديوهات</a>
+    <a href="#sports" data-ar="الرياضة" data-fr="Sport" data-en="Sports">الرياضة</a>
+    <a href="#news" data-ar="الأخبار" data-fr="Actualités" data-en="News">الأخبار</a>
+  </nav>
+  <select id="language" class="search" style="width:auto">
+    <option value="ar">العربية</option>
+    <option value="fr">Français</option>
+    <option value="en">English</option>
+  </select>
+</header>
+
+<section class="hero">
+  <h1 data-ar="مرحباً بك في AmazPlay" data-fr="Bienvenue sur AmazPlay" data-en="Welcome to AmazPlay">مرحباً بك في AmazPlay</h1>
+  <p data-ar="شاهد الفيديوهات، اكتشف الأخبار والرياضة، وشارك محتواك مع العالم." data-fr="Regardez des vidéos, découvrez l'actualité et partagez votre contenu." data-en="Watch videos, discover news and sports, and share your content with the world.">شاهد الفيديوهات، اكتشف الأخبار والرياضة، وشارك محتواك مع العالم.</p>
+  <button onclick="alert('سيتم تفعيل التسجيل قريباً')">إنشاء حساب</button>
+  <button class="secondary" onclick="alert('سيتم تفعيل رفع الفيديوهات بعد ربط قاعدة البيانات')">＋ رفع فيديو</button>
+</section>
+
+<main class="section" id="videos">
+  <h2 data-ar="اكتشف الفيديوهات" data-fr="Découvrir les vidéos" data-en="Discover videos">اكتشف الفيديوهات</h2>
+  <input id="search" class="search" placeholder="ابحث عن فيديو..." oninput="filterVideos()">
+  <div class="filters">
+    <button class="active" onclick="chooseCategory('all',this)">الكل</button>
+    <button onclick="chooseCategory('sports',this)">الرياضة</button>
+    <button onclick="chooseCategory('news',this)">الأخبار</button>
+    <button onclick="chooseCategory('entertainment',this)">الترفيه</button>
+    <button onclick="chooseCategory('education',this)">التعليم</button>
+  </div>
+
+  <div class="grid" id="videoGrid">
+    <article class="video" data-category="sports">
+      <div class="thumb">⚽</div>
+      <div class="video-info"><h3>أحدث أخبار كرة القدم</h3><p>قناة الرياضة · فيديو تجريبي</p></div>
+    </article>
+    <article class="video" data-category="news">
+      <div class="thumb">📰</div>
+      <div class="video-info"><h3>آخر الأخبار والتطورات</h3><p>قناة الأخبار · فيديو تجريبي</p></div>
+    </article>
+    <article class="video" data-category="entertainment">
+      <div class="thumb">🎬</div>
+      <div class="video-info"><h3>أفضل مقاطع الترفيه</h3><p>قناة الترفيه · فيديو تجريبي</p></div>
+    </article>
+    <article class="video" data-category="education">
+      <div class="thumb">🎓</div>
+      <div class="video-info"><h3>تعلم مهارات جديدة</h3><p>قناة التعليم · فيديو تجريبي</p></div>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div>© 2026 AmazPlay - جميع الحقوق محفوظة</div>
+  <p>منصة مستقلة لمشاركة الفيديوهات والمحتوى الرقمي</p>
+</footer>
+
+<script>
+let currentCategory='all';
+
+function chooseCategory(category,button){
+  currentCategory=category;
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  filterVideos();
+}
+
+function filterVideos(){
+  const query=document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.video').forEach(video=>{
+    const matchesCategory=currentCategory==='all'||video.dataset.category===currentCategory;
+    const matchesSearch=video.innerText.toLowerCase().includes(query);
+    video.style.display=matchesCategory&&matchesSearch?'block':'none';
+  });
+}
+
+document.getElementById('language').addEventListener('change',function(){
+  const lang=this.value;
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-'+lang+']').forEach(el=>{
+    el.textContent=el.getAttribute('data-'+lang);
+  });
+  document.getElementById('search').placeholder=
+    lang==='ar'?'ابحث عن فيديو...':lang==='fr'?'Rechercher une vidéo...':'Search videos...';
+});
+</script>
+</body>
+</html>
