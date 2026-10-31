@@ -1,2 +1,2 @@
 # amazplay
-AmazPlay - Arabic entertainment and video sharing platform.
+AmazPlay – Entertainment, News, Sports & Video Sharing Platform.
