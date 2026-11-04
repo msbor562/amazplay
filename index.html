@@ -135,13 +135,17 @@ footer{text-align:center;padding:30px;color:#aeb8d0;border-top:1px solid #27304a
 
     <input id="videoFile" type="file" accept="video/*">
 
-    <button class="secondary" onclick="openUpload()">＋ رفع فيديو</button>
-    <button class="close" onclick="closeUpload()">إغلاق</button>
+    <button type="button" onclick="uploadVideo()">
+      بدء رفع الفيديو
+    </button>
+
+    <button type="button" class="close" onclick="closeUpload()">
+      إغلاق
+    </button>
 
     <div id="uploadMessage"></div>
   </div>
-</div>
-<!-- نافذة التسجيل والدخول -->
+</div><!-- نافذة التسجيل والدخول -->
 <div class="modal" id="authModal">
   <div class="modal-box">
 
