@@ -528,6 +528,77 @@ function filterVideos(){
 }
 
 
+/* ==================================
+   عرض الفيديوهات الحقيقية من Supabase
+   ================================== */
+
+function escapeVideoText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+async function loadVideos() {
+  const grid = document.getElementById("videoGrid");
+
+  if (!grid || !supabaseClient) return;
+
+  grid.innerHTML = "<p>جارٍ تحميل الفيديوهات...</p>";
+
+  try {
+    const { data: videos, error } = await supabaseClient
+      .from("videos")
+      .select("id,title,description,video_url,thumbnail_url,views,created_at")
+      .eq("status", "published")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!videos || videos.length === 0) {
+      grid.innerHTML = "<p>لا توجد فيديوهات منشورة حالياً.</p>";
+      return;
+    }
+
+    grid.innerHTML = videos.map(video => {
+      const title = escapeVideoText(video.title);
+      const url = escapeVideoText(video.video_url);
+      const thumbnail = video.thumbnail_url
+        ? `poster="${escapeVideoText(video.thumbnail_url)}"`
+        : "";
+
+      return `
+        <div class="video" data-category="all">
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            ${thumbnail}
+            style="width:100%;border-radius:12px;background:#000;">
+            <source src="${url}">
+            متصفحك لا يدعم تشغيل الفيديو.
+          </video>
+
+          <h3>${title}</h3>
+
+          <p>المشاهدات: ${Number(video.views) || 0}</p>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("AmazPlay videos error:", error);
+    grid.innerHTML =
+      "<p>تعذر تحميل الفيديوهات: " +
+      escapeVideoText(error.message) + "</p>";
+  }
+}
+
+loadVideos();
+
 /* إغلاق النافذة عند الضغط خارجها */
 
 document.getElementById("authModal").addEventListener("click",function(event){
