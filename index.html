@@ -126,7 +126,22 @@ footer{text-align:center;padding:30px;color:#aeb8d0;border-top:1px solid #27304a
   <div>© 2026 AmazPlay - جميع الحقوق محفوظة</div>
   <p>منصة مستقلة لمشاركة الفيديوهات والمحتوى الرقمي</p>
 </footer>
+<!-- نافذة رفع الفيديو -->
+<div class="modal" id="uploadModal">
+  <div class="modal-box">
+    <h2>رفع فيديو جديد</h2>
 
+    <input id="videoTitle" type="text" placeholder="عنوان الفيديو">
+
+    <input id="videoFile" type="file" accept="video/*">
+
+    <button onclick="uploadVideo()">بدء رفع الفيديو</button>
+
+    <button class="close" onclick="closeUpload()">إغلاق</button>
+
+    <div id="uploadMessage"></div>
+  </div>
+</div>
 <!-- نافذة التسجيل والدخول -->
 <div class="modal" id="authModal">
   <div class="modal-box">
@@ -185,7 +200,26 @@ if (
 
   refreshAuthUI();
 }
+function openUpload() {
+  if (!supabaseClient) {
+    alert("الاتصال بقاعدة البيانات غير جاهز.");
+    return;
+  }
 
+  supabaseClient.auth.getSession().then(({ data }) => {
+    if (!data.session) {
+      alert("يجب تسجيل الدخول أولاً لرفع الفيديو.");
+      openAuth("login");
+      return;
+    }
+
+    document.getElementById("uploadModal").classList.add("show");
+  });
+}
+
+function closeUpload() {
+  document.getElementById("uploadModal").classList.remove("show");
+}
 
 /* ==================================
    فتح نافذة التسجيل
@@ -369,7 +403,63 @@ async function refreshAuthUI(){
     session ? session.user.email : "";
 
 }
+async function uploadVideo() {
+  const title = document.getElementById("videoTitle").value.trim();
+  const file = document.getElementById("videoFile").files[0];
+  const message = document.getElementById("uploadMessage");
 
+  if (!supabaseClient) {
+    message.textContent = "الاتصال بقاعدة البيانات غير جاهز.";
+    return;
+  }
+
+  if (!title || !file) {
+    message.textContent = "أدخل عنوان الفيديو واختر ملفاً.";
+    return;
+  }
+
+  if (!file.type.startsWith("video/")) {
+    message.textContent = "اختر ملف فيديو صالحاً.";
+    return;
+  }
+
+  const { data: { session }, error: sessionError } =
+    await supabaseClient.auth.getSession();
+
+  if (sessionError || !session) {
+    message.textContent = "يجب تسجيل الدخول أولاً.";
+    return;
+  }
+
+  const button = document.querySelector("#uploadModal button");
+  button.disabled = true;
+  message.textContent = "جارٍ رفع الفيديو... لا تغلق الصفحة.";
+
+  try {
+    const userId = session.user.id;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const filePath = `${userId}/${Date.now()}-${safeName}`;
+
+    const { error } = await supabaseClient.storage
+      .from("videos")
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    message.textContent = "تم رفع الفيديو بنجاح!";
+
+    document.getElementById("videoTitle").value = "";
+    document.getElementById("videoFile").value = "";
+
+  } catch (error) {
+    message.textContent = "فشل الرفع: " + error.message;
+  } finally {
+    button.disabled = false;
+  }
+  }
 
 /* ==================================
    تصنيف الفيديوهات
