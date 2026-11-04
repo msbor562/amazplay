@@ -436,23 +436,41 @@ async function uploadVideo() {
 
   const button = document.querySelector("#uploadModal button");
   button.disabled = true;
-  message.textContent = "جارٍ رفع الفيديو... لا تغلق الصفحة.";
+  message.textContent = "جارٍ رفع الفيديو...";
 
   try {
     const userId = session.user.id;
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const filePath = `${userId}/${Date.now()}-${safeName}`;
 
-    const { error } = await supabaseClient.storage
+    const { error: uploadError } = await supabaseClient.storage
       .from("videos")
       .upload(filePath, file, {
         contentType: file.type,
         upsert: false
       });
 
-    if (error) throw error;
+    if (uploadError) throw uploadError;
 
-    message.textContent = "تم رفع الفيديو بنجاح!";
+    const { data: publicData } = supabaseClient.storage
+      .from("videos")
+      .getPublicUrl(filePath);
+
+    const { error: insertError } = await supabaseClient
+      .from("videos")
+      .insert({
+        user_id: userId,
+        title: title,
+        description: "",
+        video_url: publicData.publicUrl,
+        language: "ar",
+        status: "published",
+        views: 0
+      });
+
+    if (insertError) throw insertError;
+
+    message.textContent = "تم رفع الفيديو وحفظ بياناته بنجاح!";
 
     document.getElementById("videoTitle").value = "";
     document.getElementById("videoFile").value = "";
@@ -462,7 +480,8 @@ async function uploadVideo() {
   } finally {
     button.disabled = false;
   }
-  }
+}
+
 
 /* ==================================
    تصنيف الفيديوهات
