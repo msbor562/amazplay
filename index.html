@@ -553,7 +553,7 @@ async function loadVideos() {
     const { data: videos, error } = await supabaseClient
       .from("videos")
       .select("id,title,description,video_url,thumbnail_url,views,created_at")
-      .eq("status", "pending")
+      .eq("status", "approved")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
