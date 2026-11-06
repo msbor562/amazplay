@@ -1,745 +1,508 @@
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AmazPlay منصة لمشاركة الفيديوهات والأخبار والرياضة والترفيه.">
-<meta name="theme-color" content="#111827">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AmazPlay - منصة الفيديو والترفيه</title>
+<meta name="description" content="AmazPlay منصة عربية لمشاركة الفيديوهات والأخبار والرياضة والترفيه.">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#0b1020;--surface:#141c30;--surface2:#1c2942;--text:#f5f7fb;--muted:#a8b3c7;--line:#2a3854;--primary:#7657ff;--danger:#e24b62;--success:#1fa77a;--warning:#d99a28;--shadow:0 12px 35px #0004}
-html[data-theme="light"]{--bg:#f3f5fb;--surface:#fff;--surface2:#edf0f8;--text:#172033;--muted:#65718a;--line:#dce2ee;--primary:#6348ed;--danger:#d83c55;--success:#12845f;--warning:#a96d00;--shadow:0 10px 28px #17203312}
+:root{
+ --bg:#f5f6fa;--card:#fff;--text:#202334;--muted:#747b8d;
+ --primary:#7048e8;--border:#e7e8ef;--input:#f7f7fb;
+}
+body.dark{
+ --bg:#11121b;--card:#1d1e2b;--text:#f4f4fa;--muted:#a5a8b8;
+ --primary:#9b7aff;--border:#343548;--input:#292a39;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
-button,input,textarea{font:inherit}
-button{cursor:pointer;border:0;border-radius:11px;padding:10px 15px;background:var(--primary);color:white;font-weight:700}
-button:hover{filter:brightness(1.08)}
-button:disabled{opacity:.55;cursor:not-allowed}
-.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
-.danger{background:var(--danger)}
-.success{background:var(--success)}
-header{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
-.topbar{max-width:1200px;margin:auto;padding:12px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
-.brand{font-size:24px;font-weight:900;color:var(--text);text-decoration:none}
-.brand span{color:var(--primary)}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-nav button{background:transparent;color:var(--muted);padding:8px 11px}
-nav button.active{background:var(--surface2);color:var(--text)}
-.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.user-email{font-size:12px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis}
-main{max-width:1200px;margin:24px auto;padding:0 18px}
-.hero{background:linear-gradient(125deg,#39258f,#202c58 58%,#125b70);border-radius:22px;padding:34px 28px;margin-bottom:25px}
-.hero h1{font-size:clamp(27px,5vw,43px);margin:0 0 8px}
-.hero p{color:#e0e5ff;max-width:680px}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
-.hero .secondary{background:#ffffff18;color:#fff;border-color:#ffffff44}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 14px}
-.section-head h2{margin:0;font-size:22px}
-.search-row{display:flex;gap:9px;flex-wrap:wrap}
-.field{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;width:100%}
-.search{width:min(310px,75vw)}
-.filters{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}
-.filters button{white-space:nowrap;background:var(--surface2);color:var(--muted)}
-.filters button.active{background:var(--primary);color:white}
-.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
-.video-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.video-card video{display:block;width:100%;aspect-ratio:16/9;background:#05070d;object-fit:contain}
-.video-info{padding:13px}
-.video-info h3{font-size:16px;margin:0 0 6px;overflow-wrap:anywhere}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;transition:.2s}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:11px 16px;background:var(--primary);color:white;font-weight:bold}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.secondary{background:var(--input);color:var(--text);border:1px solid var(--border)}
+button.danger{background:#d93650}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--input);color:var(--text);margin:6px 0 12px}
+textarea{min-height:90px;resize:vertical}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--border);padding:12px 4%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:900;color:var(--primary)}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+nav button{padding:9px 12px}
+.container{max-width:1200px;margin:auto;padding:20px}
+.hero{background:linear-gradient(120deg,#39218e,#7955ed);color:white;border-radius:18px;padding:28px;margin-bottom:22px}
+.hero h1{font-size:30px;margin:0 0 10px}
+.hero p{line-height:1.8}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;overflow:hidden}
+.card-body{padding:13px}
+.video-box{width:100%;aspect-ratio:16/9;background:#090a12;display:block;object-fit:cover}
+video{width:100%;aspect-ratio:16/9;background:#000}
 .muted{color:var(--muted);font-size:13px}
-.empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:28px;text-align:center;color:var(--muted);grid-column:1/-1}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:18px;margin:28px 0}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}
-.stat{background:var(--surface2);border-radius:13px;padding:16px}
-.stat strong{display:block;font-size:27px}
-.stat span{color:var(--muted);font-size:13px}
-.request-list{display:grid;gap:12px}
-.request{border:1px solid var(--line);border-radius:13px;padding:14px}
-.request-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.status{border-radius:30px;padding:3px 10px;font-size:12px;background:var(--surface2)}
-.status.pending{color:var(--warning)}
-.status.approved{color:var(--success)}
-.status.rejected{color:var(--danger)}
-.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.note{margin-top:10px;min-height:65px;resize:vertical}
-.modal{position:fixed;inset:0;z-index:50;background:#0009;display:none;align-items:center;justify-content:center;padding:15px}
-.modal.open{display:flex}
-.modal-box{width:min(480px,100%);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
-.modal-box h2{margin:0 0 14px}
-.modal-box label{display:block;margin:12px 0 5px;color:var(--muted);font-size:13px}
-.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
-.close{float:left;background:var(--surface2);color:var(--text);padding:5px 10px}
-.message{font-size:13px;margin-top:10px;color:var(--muted);min-height:20px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:18px;margin:15px 0}
 .hidden{display:none!important}
-footer{text-align:center;color:var(--muted);padding:35px 15px;border-top:1px solid var(--line);margin-top:45px}
-@media(max-width:850px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){
-.topbar{padding:10px 12px}.brand{font-size:21px}
-nav{order:3;width:100%;justify-content:space-between}
-.actions{margin-right:auto}.user-email{display:none}
-main{padding:0 12px;margin-top:15px}
-.hero{padding:25px 18px;border-radius:17px}
-.video-grid{grid-template-columns:1fr}
-.stats{grid-template-columns:1fr}
-.section-head{align-items:flex-start}
-.search{width:100%}.search-row{width:100%}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:var(--input);border-radius:12px;padding:17px;text-align:center}
+.stat strong{display:block;font-size:25px;color:var(--primary);margin-top:8px}
+.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;background:var(--input)}
+.banner{width:100%;height:170px;object-fit:cover;border-radius:12px;background:var(--input)}
+.modal{position:fixed;inset:0;background:#0009;z-index:10;display:flex;align-items:center;justify-content:center;padding:15px}
+.modal-box{width:100%;max-width:460px;max-height:90vh;overflow:auto;background:var(--card);padding:22px;border-radius:16px}
+.message{padding:12px;border-radius:10px;background:var(--input);margin:10px 0;white-space:pre-wrap}
+footer{text-align:center;color:var(--muted);padding:30px}
+.small-btn{padding:7px 10px;font-size:13px}
+video{max-height:360px}
+@media(max-width:600px){
+ header{padding:10px}
+ .container{padding:12px}
+ .hero{padding:20px}
+ .hero h1{font-size:24px}
+ nav{width:100%}
+ nav button{flex:1}
+ .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
 <header>
-<div class="topbar">
-<a class="brand" href="#">Amaz<span>Play</span></a>
-
-<nav>
-<button class="active" onclick="showSection('all',this)">الرئيسية</button>
-<button onclick="showSection('sports',this)">الرياضة</button>
-<button onclick="showSection('news',this)">الأخبار</button>
-</nav>
-
-<div class="actions">
-<span id="userEmail" class="user-email"></span>
-<button class="secondary" onclick="toggleTheme()">☀️ / 🌙</button>
-<button id="loginBtn" onclick="openAuth('login')">دخول</button>
-<button id="signupBtn" class="secondary" onclick="openAuth('signup')">حساب جديد</button>
-<button id="logoutBtn" class="secondary hidden" onclick="logout()">خروج</button>
-</div>
-</div>
+ <div class="logo">▶ AmazPlay</div>
+ <nav>
+  <button onclick="showPage('home')">الرئيسية</button>
+  <button onclick="showPage('channel')">قناتي</button>
+  <button onclick="showPage('admin')" id="adminNav" class="hidden">الإدارة</button>
+  <button class="secondary" onclick="toggleTheme()">◐</button>
+  <button onclick="openAuth()" id="authButton">دخول</button>
+  <button class="secondary hidden" id="logoutButton" onclick="logout()">خروج</button>
+ </nav>
 </header>
 
-<main>
-
-<section class="hero">
-<h1>اكتشف عالم الفيديو مع AmazPlay</h1>
-<p>منصة لمشاركة الفيديوهات والأخبار والرياضة والترفيه.</p>
-<div class="hero-actions">
-<button onclick="openUpload()">＋ رفع فيديو</button>
-<button class="secondary" onclick="document.getElementById('videosSection').scrollIntoView({behavior:'smooth'})">استكشف الفيديوهات</button>
-</div>
+<main class="container">
+<section id="homePage">
+ <div class="hero">
+  <h1>مرحباً بك في AmazPlay</h1>
+  <p>منصتك لمشاهدة ومشاركة الفيديوهات والأخبار والرياضة والترفيه.</p>
+  <button onclick="openUpload()">＋ ارفع فيديوك</button>
+ </div>
+ <div class="section-title">
+  <h2>اكتشف الفيديوهات</h2>
+  <input id="searchInput" placeholder="ابحث عن فيديو..." style="max-width:280px" oninput="renderVideos()">
+ </div>
+ <div class="row" style="margin-bottom:15px">
+  <button class="secondary" onclick="filterVideos('all')">الكل</button>
+  <button class="secondary" onclick="filterVideos('ar')">العربية</button>
+  <button class="secondary" onclick="filterVideos('fr')">الفرنسية</button>
+  <button class="secondary" onclick="filterVideos('en')">الإنجليزية</button>
+ </div>
+ <div id="videoGrid" class="grid"></div>
+ <div id="homeMessage" class="message">جارٍ تحميل الفيديوهات...</div>
 </section>
 
-<section id="videosSection">
-<div class="section-head">
-<h2 id="videosTitle">أحدث الفيديوهات</h2>
-<div class="search-row">
-<input id="searchInput" class="field search" type="search" placeholder="ابحث عن فيديو..." oninput="filterVideos()">
-</div>
-</div>
-
-<div class="filters">
-<button class="active" onclick="chooseCategory('all',this)">الكل</button>
-<button onclick="chooseCategory('sports',this)">الرياضة</button>
-<button onclick="chooseCategory('news',this)">الأخبار</button>
-<button onclick="chooseCategory('other',this)">منوعات</button>
-</div>
-
-<div id="videoGrid" class="video-grid">
-<div class="empty">جارٍ تحميل الفيديوهات...</div>
-</div>
-<p id="videoMessage" class="message"></p>
+<section id="channelPage" class="hidden">
+ <div class="section-title">
+  <h2>لوحة قناتي</h2>
+  <button onclick="openUpload()">＋ رفع فيديو</button>
+ </div>
+ <div id="channelContent">
+  <div class="message">سجل الدخول لعرض قناتك.</div>
+ </div>
 </section>
 
-<section id="adminPanel" class="panel hidden">
-<div class="section-head">
-<div>
-<h2>لوحة تحكم المدير</h2>
-<div class="muted">إدارة طلبات تحقيق الدخل وإحصائيات المنصة</div>
-</div>
-<button class="secondary" onclick="loadAdminPanel()">تحديث البيانات ↻</button>
-</div>
-
-<div class="stats">
-<div class="stat">
-<strong id="statUsers">—</strong>
-<span>إجمالي المستخدمين</span>
-</div>
-<div class="stat">
-<strong id="statVideos">—</strong>
-<span>الفيديوهات المقبولة</span>
-</div>
-<div class="stat">
-<strong id="statPending">—</strong>
-<span>طلبات تحقيق الدخل المعلقة</span>
-</div>
-</div>
-<div class="section-head">
-  <h2>إدارة الفيديوهات المعلقة</h2>
-  <span class="muted">مراجعة الفيديوهات قبل نشرها</span>
-</div>
-
-<div id="pendingVideoList" class="request-list">
-  <div class="empty">جارٍ تحميل الفيديوهات المعلقة...</div>
-</div>
-<div class="section-head">
-<h2>طلبات تحقيق الدخل</h2>
-</div>
-
-<div id="requestList" class="request-list">
-<div class="empty">جارٍ تحميل الطلبات...</div>
-</div>
-
-<p id="adminMessage" class="message"></p>
+<section id="adminPage" class="hidden">
+ <h2>لوحة تحكم المدير</h2>
+ <div class="stat-grid">
+  <div class="stat">المستخدمون<strong id="statUsers">—</strong></div>
+  <div class="stat">الفيديوهات<strong id="statVideos">—</strong></div>
+  <div class="stat">طلبات الانتظار<strong id="statPending">—</strong></div>
+ </div>
+ <div class="panel">
+  <h3>طلبات تحقيق الدخل</h3>
+  <div id="requestList">جارٍ التحميل...</div>
+ </div>
+ <div class="panel">
+  <h3>الفيديوهات المعلقة</h3>
+  <div id="pendingVideos">جارٍ التحميل...</div>
+ </div>
+ <div id="adminMessage" class="message"></div>
 </section>
-
 </main>
 
-<footer>© <span id="year"></span> AmazPlay — منصة الفيديو والترفيه</footer>
+<footer>AmazPlay © 2026 - منصة الفيديو والترفيه</footer>
 
-<div id="authModal" class="modal">
-<div class="modal-box">
-<button class="close" onclick="closeAuth()">✕</button>
-<h2 id="authTitle">تسجيل الدخول</h2>
-
-<label for="authEmail">البريد الإلكتروني</label>
-<input id="authEmail" class="field" type="email" autocomplete="email">
-
-<label for="authPassword">كلمة المرور</label>
-<input id="authPassword" class="field" type="password" autocomplete="current-password">
-
-<div class="modal-actions">
-<button id="authSubmit" onclick="submitAuth()">دخول</button>
-<button class="secondary" onclick="closeAuth()">إلغاء</button>
+<div id="authModal" class="modal hidden">
+ <div class="modal-box">
+  <div class="section-title"><h2 id="authTitle">تسجيل الدخول</h2><button class="secondary" onclick="closeModal('authModal')">✕</button></div>
+  <div id="signupFields" class="hidden">
+   <label>اسم المستخدم</label>
+   <input id="signupName" placeholder="اسمك">
+  </div>
+  <label>البريد الإلكتروني</label>
+  <input id="authEmail" type="email" placeholder="example@email.com">
+  <label>كلمة المرور</label>
+  <input id="authPassword" type="password" placeholder="كلمة المرور">
+  <button id="authSubmit" onclick="submitAuth()" style="width:100%">دخول</button>
+  <p id="authMessage" class="message"></p>
+  <button class="secondary" id="switchAuth" onclick="switchAuthMode()">إنشاء حساب جديد</button>
+ </div>
 </div>
 
-<p id="authMessage" class="message"></p>
-</div>
-</div>
-
-<div id="uploadModal" class="modal">
-<div class="modal-box">
-<button class="close" onclick="closeUpload()">✕</button>
-<h2>رفع فيديو جديد</h2>
-
-<label for="videoTitle">عنوان الفيديو</label>
-<input id="videoTitle" class="field" maxlength="120" placeholder="اكتب عنوان الفيديو">
-
-<label for="videoFile">اختر ملف الفيديو</label>
-<input id="videoFile" class="field" type="file" accept="video/*">
-
-<p class="muted">سيُرسل الفيديو للمراجعة، ولن يظهر للزوار إلا بعد موافقة المدير.</p>
-
-<div class="modal-actions">
-<button id="uploadButton" onclick="uploadVideo()">رفع الفيديو</button>
-<button class="secondary" onclick="closeUpload()">إلغاء</button>
-</div>
-
-<p id="uploadMessage" class="message"></p>
-</div>
+<div id="uploadModal" class="modal hidden">
+ <div class="modal-box">
+  <div class="section-title"><h2>رفع فيديو جديد</h2><button class="secondary" onclick="closeModal('uploadModal')">✕</button></div>
+  <label>عنوان الفيديو</label>
+  <input id="videoTitle" placeholder="اكتب عنوان الفيديو">
+  <label>وصف الفيديو</label>
+  <textarea id="videoDescription" placeholder="وصف الفيديو"></textarea>
+  <label>لغة الفيديو</label>
+  <select id="videoLanguage">
+   <option value="ar">العربية</option><option value="fr">الفرنسية</option><option value="en">الإنجليزية</option>
+  </select>
+  <label>ملف الفيديو</label>
+  <input id="videoFile" type="file" accept="video/*">
+  <button id="uploadButton" onclick="uploadVideo()" style="width:100%">رفع وإرسال للمراجعة</button>
+  <div id="uploadMessage" class="message"></div>
+ </div>
 </div>
 
 <script>
 const SUPABASE_URL = "https://lkhlozhujogidcmfhmoj.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_vf8uXMxJRS431TR8XNKDhA_5z6ivwis";
+const SUPABASE_KEY = "sb_publishable_vf8uXMxJRS431TR8XNKDhA_5z6ivwis";
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const supabaseClient = window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_ANON_KEY
-);
+let currentUser=null;
+let currentChannel=null;
+let allVideos=[];
+let languageFilter="all";
+let authMode="login";
 
-let currentCategory = "all";
-let videoCache = [];
-let isAdmin = false;
-let currentSession = null;
-let authMode = "login";
-
-document.getElementById("year").textContent = new Date().getFullYear();
-
-function escapeHtml(value) {
-return String(value ?? "").replace(/[&<>"']/g, c => ({
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
-}[c]));
+const $ = id => document.getElementById(id);
+function msg(id,text,error=false){
+ const el=$(id);if(!el)return;
+ el.textContent=text;
+ el.style.color=error?"#e04455":"var(--text)";
 }
-
-function setMessage(id,message,isError=false) {
-const el=document.getElementById(id);
-if(el) {
-el.textContent=message || "";
-el.style.color=isError ? "var(--danger)" : "var(--muted)";
+function showPage(page){
+ ["homePage","channelPage","adminPage"].forEach(id=>$(id).classList.add("hidden"));
+ const target=$(page+"Page");
+ if(target)target.classList.remove("hidden");
+ if(page==="channel")loadChannel();
+ if(page==="admin")loadAdmin();
+ window.scrollTo(0,0);
 }
+function toggleTheme(){document.body.classList.toggle("dark");}
+function closeModal(id){$(id).classList.add("hidden");}
+function openAuth(){$("authModal").classList.remove("hidden");}
+function openUpload(){
+ if(!currentUser){openAuth();return;}
+ $("uploadModal").classList.remove("hidden");
 }
-
-function toggleTheme() {
-const root=document.documentElement;
-const next=root.getAttribute("data-theme")==="dark" ? "light" : "dark";
-root.setAttribute("data-theme",next);
-try {
-localStorage.setItem("amazplay-theme",next);
-} catch(e) {}
+function switchAuthMode(){
+ authMode=authMode==="login"?"signup":"login";
+ $("authTitle").textContent=authMode==="login"?"تسجيل الدخول":"إنشاء حساب";
+ $("authSubmit").textContent=authMode==="login"?"دخول":"إنشاء الحساب";
+ $("switchAuth").textContent=authMode==="login"?"إنشاء حساب جديد":"لدي حساب بالفعل";
+ $("signupFields").classList.toggle("hidden",authMode==="login");
+ msg("authMessage","");
 }
-
-(function initTheme(){
-try {
-const saved=localStorage.getItem("amazplay-theme");
-if(saved==="light" || saved==="dark") {
-document.documentElement.setAttribute("data-theme",saved);
+async function submitAuth(){
+ const email=$("authEmail").value.trim();
+ const password=$("authPassword").value;
+ if(!email||!password){msg("authMessage","أدخل البريد وكلمة المرور.",true);return;}
+ $("authSubmit").disabled=true;
+ try{
+  let result;
+  if(authMode==="login"){
+   result=await db.auth.signInWithPassword({email,password});
+  }else{
+   const username=$("signupName").value.trim();
+   if(!username)throw new Error("أدخل اسم المستخدم.");
+   result=await db.auth.signUp({email,password,options:{data:{username}}});
+  }
+  if(result.error)throw result.error;
+  if(authMode==="signup"&&!result.data.session){
+   msg("authMessage","تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيد التسجيل.");
+  }else{
+   closeModal("authModal");
+   await refreshAuth();
+  }
+ }catch(e){msg("authMessage",e.message,true);}
+ finally{$("authSubmit").disabled=false;}
 }
-} catch(e) {}
-})();
-
-function openAuth(mode="login") {
-authMode=mode;
-document.getElementById("authTitle").textContent=
-mode==="signup" ? "إنشاء حساب جديد" : "تسجيل الدخول";
-
-document.getElementById("authSubmit").textContent=
-mode==="signup" ? "إنشاء حساب" : "دخول";
-
-setMessage("authMessage","");
-document.getElementById("authModal").classList.add("open");
+async function logout(){
+ await db.auth.signOut();
+ currentUser=null;currentChannel=null;
+ await refreshAuth();showPage("home");
 }
-
-function closeAuth() {
-document.getElementById("authModal").classList.remove("open");
+async function refreshAuth(){
+ const {data}=await db.auth.getSession();
+ currentUser=data.session?.user||null;
+ $("authButton").classList.toggle("hidden",!!currentUser);
+ $("logoutButton").classList.toggle("hidden",!currentUser);
+ if(currentUser){
+  const {data:p}=await db.from("profiles").select("role").eq("id",currentUser.id).maybeSingle();
+  const isAdmin=p?.role==="admin";
+  $("adminNav").classList.toggle("hidden",!isAdmin);
+ }else{$("adminNav").classList.add("hidden");}
 }
-
-function openUpload() {
-if(!currentSession) {
-openAuth("login");
-setMessage("authMessage","سجّل الدخول أولاً لرفع فيديو.");
-return;
+async function ensureChannel(){
+ if(!currentUser)return null;
+ const {data,error}=await db.from("channels").select("*").eq("user_id",currentUser.id).maybeSingle();
+ if(error)throw error;
+ if(data)return data;
+ const username=currentUser.user_metadata?.username||currentUser.email.split("@")[0];
+ const {data:created,error:createError}=await db.from("channels").insert({
+  user_id:currentUser.id,name:username,description:"مرحباً بكم في قناتي"
+ }).select().single();
+ if(createError)throw createError;
+ return created;
 }
-setMessage("uploadMessage","");
-document.getElementById("uploadModal").classList.add("open");
+async function loadVideos(){
+ msg("homeMessage","جارٍ تحميل الفيديوهات...");
+ const {data,error}=await db.from("videos").select("*").eq("status","approved").order("created_at",{ascending:false}).limit(100);
+ if(error){msg("homeMessage","تعذر تحميل الفيديوهات: "+error.message,true);return;}
+ allVideos=data||[];
+ const ids=[...new Set(allVideos.map(v=>v.channel_id).filter(Boolean))];
+ let channels={};
+ if(ids.length){
+  const result=await db.from("channels").select("id,name,channel_image_url").in("id",ids);
+  if(!result.error)(result.data||[]).forEach(c=>channels[c.id]=c);
+ }
+ allVideos=allVideos.map(v=>({...v,channel:channels[v.channel_id]}));
+ renderVideos();
 }
-
-function closeUpload() {
-document.getElementById("uploadModal").classList.remove("open");
+function filterVideos(value){languageFilter=value;renderVideos();}
+function renderVideos(){
+ const search=($("searchInput").value||"").toLowerCase();
+ const list=allVideos.filter(v=>
+  (languageFilter==="all"||v.language===languageFilter)&&
+  ((v.title||"").toLowerCase().includes(search)||(v.description||"").toLowerCase().includes(search))
+ );
+ $("videoGrid").innerHTML="";
+ if(!list.length){msg("homeMessage","لا توجد فيديوهات منشورة حالياً.");return;}
+ msg("homeMessage","");
+ list.forEach(v=>{
+  const card=document.createElement("article");card.className="card";
+  const video=document.createElement("video");
+  video.className="video-box";video.controls=true;video.preload="metadata";
+  video.src=v.video_url;
+  const body=document.createElement("div");body.className="card-body";
+  const title=document.createElement("h3");title.textContent=v.title||"فيديو بدون عنوان";
+  const channel=document.createElement("p");channel.className="muted";
+  channel.textContent=v.channel?.name||"قناة AmazPlay";
+  const views=document.createElement("p");views.className="muted";
+  views.textContent=Number(v.views||0).toLocaleString("ar")+" مشاهدة";
+  body.append(title,channel,views);card.append(video,body);$("videoGrid").append(card);
+ });
 }
-
-async function submitAuth() {
-const email=document.getElementById("authEmail").value.trim();
-const password=document.getElementById("authPassword").value;
-
-if(!email || !password) {
-return setMessage("authMessage","أدخل البريد الإلكتروني وكلمة المرور.",true);
+async function uploadVideo(){
+ if(!currentUser){openAuth();return;}
+ const title=$("videoTitle").value.trim();
+ const description=$("videoDescription").value.trim();
+ const file=$("videoFile").files[0];
+ if(!title||!file){msg("uploadMessage","أدخل عنوان الفيديو واختر الملف.",true);return;}
+ if(!file.type.startsWith("video/")){msg("uploadMessage","الملف المختار ليس فيديو.",true);return;}
+ $("uploadButton").disabled=true;
+ msg("uploadMessage","جارٍ رفع الفيديو... لا تغلق الصفحة.");
+ try{
+  const channel=await ensureChannel();
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const path=currentUser.id+"/"+Date.now()+"_"+safeName;
+  const {error:storageError}=await db.storage.from("videos").upload(path,file,{contentType:file.type,upsert:false});
+  if(storageError)throw storageError;
+  const {data:publicData}=db.storage.from("videos").getPublicUrl(path);
+  const {error:insertError}=await db.from("videos").insert({
+   user_id:currentUser.id,channel_id:channel.id,title,description,
+   video_url:publicData.publicUrl,language:$("videoLanguage").value,
+   status:"pending",views:0
+  });
+  if(insertError)throw insertError;
+  msg("uploadMessage","تم رفع الفيديو وإرساله إلى الإدارة للمراجعة.");
+  $("videoTitle").value="";$("videoDescription").value="";$("videoFile").value="";
+  await loadChannel();
+ }catch(e){msg("uploadMessage","حدث خطأ: "+e.message,true);}
+ finally{$("uploadButton").disabled=false;}
 }
-
-const btn=document.getElementById("authSubmit");
-btn.disabled=true;
-setMessage("authMessage","جارٍ تنفيذ العملية...");
-
-try {
-let result;
-
-if(authMode==="signup") {
-result=await supabaseClient.auth.signUp({email,password});
-
-if(!result.error) {
-setMessage("authMessage","تم إنشاء الحساب. إذا كان تأكيد البريد مفعّلاً فتحقق من بريدك الإلكتروني.");
+async function uploadChannelImage(inputId,field){
+ const file=$(inputId).files[0];
+ if(!file||!currentUser)return;
+ if(!file.type.startsWith("image/")){alert("اختر صورة صحيحة.");return;}
+ try{
+  const ext=(file.name.split(".").pop()||"jpg").replace(/[^a-zA-Z0-9]/g,"");
+  const path=currentUser.id+"/"+field+"_"+Date.now()+"."+ext;
+  const {error}=await db.storage.from("channel-assets").upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw error;
+  const {data}=db.storage.from("channel-assets").getPublicUrl(path);
+  const update={};update[field]=data.publicUrl;
+  const {error:updateError}=await db.from("channels").update(update).eq("id",currentChannel.id);
+  if(updateError)throw updateError;
+  await loadChannel();
+ }catch(e){alert("تعذر رفع الصورة: "+e.message);}
 }
-} else {
-result=await supabaseClient.auth.signInWithPassword({email,password});
+async function saveChannel(){
+ if(!currentChannel)return;
+ const name=$("channelName").value.trim();
+ const description=$("channelDescription").value.trim();
+ if(!name){alert("اكتب اسم القناة.");return;}
+ const {error}=await db.from("channels").update({name,description}).eq("id",currentChannel.id);
+ if(error){alert("تعذر حفظ التعديلات: "+error.message);return;}
+ alert("تم تحديث القناة.");
+ await loadChannel();
 }
-
-if(result.error) throw result.error;
-
-if(authMode==="login" && result.data.session) {
-currentSession=result.data.session;
-closeAuth();
-await refreshAuthUI(currentSession);
+async function loadChannel(){
+ if(!currentUser){$("channelContent").innerHTML='<div class="message">سجل الدخول أولاً لعرض قناتك.</div>';return;}
+ $("channelContent").innerHTML='<div class="message">جارٍ تحميل القناة...</div>';
+ try{
+  currentChannel=await ensureChannel();
+  const [videosRes,followersRes,requestRes]=await Promise.all([
+   db.from("videos").select("*").eq("channel_id",currentChannel.id).order("created_at",{ascending:false}),
+   db.from("follows").select("*",{count:"exact",head:true}).eq("channel_id",currentChannel.id),
+   db.from("monetization_requests").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1)
+  ]);
+  if(videosRes.error)throw videosRes.error;
+  const videos=videosRes.data||[];
+  const approved=videos.filter(v=>v.status==="approved");
+  const views=approved.reduce((sum,v)=>sum+Number(v.views||0),0);
+  const followers=followersRes.error?null:(followersRes.count||0);
+  const request=requestRes.data?.[0];
+  const avatar=currentChannel.channel_image_url||"";
+  const banner=currentChannel.banner_url||"";
+  $("channelContent").innerHTML=`
+   <div class="panel">
+    <img class="banner" src="${escapeAttr(banner)}" onerror="this.style.display='none'">
+    <div class="row" style="margin-top:12px">
+     <img class="avatar" src="${escapeAttr(avatar)}" onerror="this.style.display='none'">
+     <div><h2>${escapeHTML(currentChannel.name)}</h2><p class="muted">${escapeHTML(currentChannel.description||"")}</p></div>
+    </div>
+   </div>
+   <div class="panel">
+    <h3>تعديل معلومات القناة</h3>
+    <label>اسم القناة</label><input id="channelName" value="${escapeAttr(currentChannel.name||"")}">
+    <label>وصف القناة</label><textarea id="channelDescription">${escapeHTML(currentChannel.description||"")}</textarea>
+    <label>صورة القناة</label><input type="file" id="avatarFile" accept="image/*">
+    <button class="secondary" onclick="uploadChannelImage('avatarFile','channel_image_url')">رفع الصورة</button>
+    <label>غلاف القناة</label><input type="file" id="bannerFile" accept="image/*">
+    <button class="secondary" onclick="uploadChannelImage('bannerFile','banner_url')">رفع الغلاف</button>
+    <button onclick="saveChannel()">حفظ التعديلات</button>
+   </div>
+   <div class="stat-grid">
+    <div class="stat">الفيديوهات المقبولة<strong>${approved.length}</strong></div>
+    <div class="stat">المشاهدات<strong>${views.toLocaleString("ar")}</strong></div>
+    <div class="stat">المتابعون<strong>${followers===null?"—":followers.toLocaleString("ar")}</strong></div>
+   </div>
+   <div class="panel">
+    <h3>تحقيق الدخل</h3>
+    <p class="muted">يمكنك إرسال طلب للمراجعة. الأرقام المعروضة لا تعني ضمان قبول الطلب أو وجود أرباح مدفوعة.</p>
+    <p>الحد الاسترشادي: 100 متابع و1000 مشاهدة للفيديوهات المقبولة.</p>
+    ${request?`<p>حالة آخر طلب: <b>${statusArabic(request.status)}</b></p><p class="muted">${escapeHTML(request.review_note||"")}</p>`:""}
+    <label>ملاحظة مع الطلب (اختياري)</label>
+    <textarea id="monetizationNote" placeholder="اكتب ملاحظتك للإدارة"></textarea>
+    <button onclick="submitMonetization(${views},${followers||0})">إرسال طلب تحقيق الدخل</button>
+    <div id="monetizationMessage" class="message"></div>
+   </div>
+   <div class="panel"><h3>فيديوهاتي</h3><div id="myVideos"></div></div>`;
+  const myList=$("myVideos");
+  if(!videos.length)myList.textContent="لم ترفع أي فيديو بعد.";
+  videos.forEach(v=>{
+   const item=document.createElement("div");item.className="message";
+   item.textContent=(v.title||"بدون عنوان")+" — "+statusArabic(v.status)+" — "+Number(v.views||0).toLocaleString("ar")+" مشاهدة";
+   myList.append(item);
+  });
+ }catch(e){$("channelContent").innerHTML='<div class="message">تعذر تحميل القناة: '+escapeHTML(e.message)+'</div>';}
 }
-
-} catch(err) {
-setMessage("authMessage",err.message || "تعذّر إكمال العملية.",true);
-} finally {
-btn.disabled=false;
+async function submitMonetization(views,followers){
+ if(!currentUser||!currentChannel)return;
+ const {data:existing,error:checkError}=await db.from("monetization_requests").select("id,status").eq("user_id",currentUser.id).eq("status","pending").limit(1);
+ if(checkError){msg("monetizationMessage",checkError.message,true);return;}
+ if(existing?.length){msg("monetizationMessage","لديك طلب قيد المراجعة بالفعل.");return;}
+ const note=$("monetizationNote").value.trim();
+ const {error}=await db.from("monetization_requests").insert({
+  user_id:currentUser.id,channel_id:currentChannel.id,
+  total_views:views,followers_count:followers,status:"pending",review_note:note
+ });
+ if(error){msg("monetizationMessage","تعذر إرسال الطلب: "+error.message,true);return;}
+ msg("monetizationMessage","تم إرسال طلبك بنجاح. ستتم مراجعته من الإدارة.");
+ await loadChannel();
 }
+function statusArabic(s){
+ return ({pending:"قيد المراجعة",approved:"مقبول",rejected:"مرفوض"})[s]||s||"غير معروف";
 }
-
-async function logout() {
-const {error}=await supabaseClient.auth.signOut();
-
-if(error) {
-alert(error.message);
-return;
+function escapeHTML(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-
-currentSession=null;
-isAdmin=false;
-await refreshAuthUI(null);
+function escapeAttr(s){return escapeHTML(s);}
+async function loadAdmin(){
+ const {data:profile,error:profileError}=await db.from("profiles").select("role").eq("id",currentUser?.id||"").maybeSingle();
+ if(profileError||profile?.role!=="admin"){
+  $("adminPage").innerHTML="<h2>غير مصرح لك بالدخول إلى لوحة الإدارة.</h2>";return;
+ }
+ const [usersRes,videosRes,requestsRes,pendingRes]=await Promise.all([
+  db.from("profiles").select("*",{count:"exact",head:true}),
+  db.from("videos").select("*",{count:"exact",head:true}).eq("status","approved"),
+  db.from("monetization_requests").select("*").order("created_at",{ascending:false}),
+  db.from("videos").select("*").eq("status","pending").order("created_at",{ascending:false})
+ ]);
+ $("statUsers").textContent=usersRes.error?"—":(usersRes.count||0).toLocaleString("ar");
+ $("statVideos").textContent=videosRes.error?"—":(videosRes.count||0).toLocaleString("ar");
+ const requests=requestsRes.data||[];
+ $("statPending").textContent=requestsRes.error?"—":requests.filter(r=>r.status==="pending").length.toLocaleString("ar");
+ if(usersRes.error||videosRes.error)msg("adminMessage","تعذر جلب بعض الإحصائيات.",true);
+ else if(requestsRes.error)msg("adminMessage","تعذر قراءة الطلبات: "+requestsRes.error.message,true);
+ else msg("adminMessage","تم تحديث البيانات.");
+ renderRequests(requests,requestsRes.error);
+ renderPendingVideos(pendingRes.data||[],pendingRes.error);
 }
-
-async function refreshAuthUI(sessionArg) {
-let session=sessionArg;
-
-if(sessionArg===undefined) {
-const {data,error}=await supabaseClient.auth.getSession();
-if(error) console.error(error);
-session=data?.session || null;
+function renderRequests(requests,error){
+ const list=$("requestList");list.innerHTML="";
+ if(error){list.textContent="تعذر تحميل الطلبات.";return;}
+ if(!requests.length){list.textContent="لا توجد طلبات حالياً.";return;}
+ requests.forEach(r=>{
+  const box=document.createElement("div");box.className="panel";
+  const info=document.createElement("p");
+  info.textContent="المستخدم: "+r.user_id+" | المشاهدات: "+r.total_views+" | المتابعون: "+r.followers_count+" | الحالة: "+statusArabic(r.status);
+  const note=document.createElement("textarea");note.placeholder="ملاحظة الإدارة";note.value=r.review_note||"";
+  const approve=document.createElement("button");approve.textContent="قبول";approve.onclick=()=>reviewRequest(r.id,"approved",note.value);
+  const reject=document.createElement("button");reject.textContent="رفض";reject.className="danger";reject.onclick=()=>reviewRequest(r.id,"rejected",note.value);
+  box.append(info,note,approve,reject);list.append(box);
+ });
 }
-
-currentSession=session;
-
-const signedIn=!!session?.user;
-
-document.getElementById("loginBtn").classList.toggle("hidden",signedIn);
-document.getElementById("signupBtn").classList.toggle("hidden",signedIn);
-document.getElementById("logoutBtn").classList.toggle("hidden",!signedIn);
-document.getElementById("userEmail").textContent=
-signedIn ? session.user.email : "";
-
-isAdmin=false;
-document.getElementById("adminPanel").classList.add("hidden");
-
-if(signedIn) {
-const {data,error}=await supabaseClient
-.from("profiles")
-.select("role")
-.eq("id",session.user.id)
-.maybeSingle();
-
-if(error) console.warn("تعذر التحقق من دور المستخدم:",error.message);
-
-isAdmin=data?.role==="admin";
-
-if(isAdmin) {
-document.getElementById("adminPanel").classList.remove("hidden");
-await loadAdminPanel();
+async function reviewRequest(id,status,note){
+ const {error}=await db.from("monetization_requests").update({status,review_note:note}).eq("id",id);
+ if(error){msg("adminMessage","تعذر تحديث الطلب: "+error.message,true);return;}
+ msg("adminMessage","تم تحديث الطلب.");
+ await loadAdmin();
 }
+function renderPendingVideos(videos,error){
+ const list=$("pendingVideos");list.innerHTML="";
+ if(error){list.textContent="تعذر تحميل الفيديوهات المعلقة.";return;}
+ if(!videos.length){list.textContent="لا توجد فيديوهات معلقة.";return;}
+ videos.forEach(v=>{
+  const box=document.createElement("div");box.className="panel";
+  const title=document.createElement("p");title.textContent=v.title||"بدون عنوان";
+  const link=document.createElement("a");link.href=v.video_url;link.target="_blank";link.rel="noopener";link.textContent="مشاهدة الفيديو";
+  const approve=document.createElement("button");approve.textContent="قبول الفيديو";approve.onclick=()=>reviewVideo(v.id,"approved");
+  const reject=document.createElement("button");reject.textContent="رفض الفيديو";reject.className="danger";reject.onclick=()=>reviewVideo(v.id,"rejected");
+  box.append(title,link,document.createElement("br"),approve,reject);list.append(box);
+ });
 }
+async function reviewVideo(id,status){
+ const {error}=await db.from("videos").update({status}).eq("id",id);
+ if(error){msg("adminMessage","تعذر تحديث الفيديو: "+error.message,true);return;}
+ msg("adminMessage","تم تحديث حالة الفيديو.");
+ await loadAdmin();await loadVideos();
 }
-
-async function uploadVideo() {
-if(!currentSession) {
-return setMessage("uploadMessage","يجب تسجيل الدخول أولاً.",true);
-}
-
-const title=document.getElementById("videoTitle").value.trim();
-const file=document.getElementById("videoFile").files[0];
-
-if(!title || !file) {
-return setMessage("uploadMessage","أدخل عنوان الفيديو واختر ملفاً.",true);
-}
-
-if(!file.type.startsWith("video/")) {
-return setMessage("uploadMessage","الملف المختار ليس فيديو.",true);
-}
-
-const button=document.getElementById("uploadButton");
-button.disabled=true;
-
-setMessage("uploadMessage","جارٍ رفع الفيديو... لا تغلق الصفحة.");
-
-try {
-const userId=currentSession.user.id;
-const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-const filePath=`${userId}/${Date.now()}-${safeName}`;
-
-const {error:uploadError}=await supabaseClient.storage
-.from("videos")
-.upload(filePath,file,{
-cacheControl:"3600",
-upsert:false,
-contentType:file.type
+db.auth.onAuthStateChange((_event,session)=>{
+ setTimeout(async()=>{
+  currentUser=session?.user||null;
+  await refreshAuth();
+ },0);
 });
-
-if(uploadError) throw uploadError;
-
-const {data:publicData}=supabaseClient.storage
-.from("videos")
-.getPublicUrl(filePath);
-
-const {error:insertError}=await supabaseClient
-.from("videos")
-.insert({
-user_id:userId,
-title:title,
-description:"",
-video_url:publicData.publicUrl,
-language:"ar",
-status:"pending",
-views:0
-});
-
-if(insertError) throw insertError;
-
-setMessage("uploadMessage","تم رفع الفيديو وإرساله للمراجعة بنجاح.");
-
-document.getElementById("videoTitle").value="";
-document.getElementById("videoFile").value="";
-
-} catch(err) {
-setMessage("uploadMessage",err.message || "حدث خطأ أثناء رفع الفيديو.",true);
-} finally {
-button.disabled=false;
-}
-}
-
-async function loadVideos() {
-const grid=document.getElementById("videoGrid");
-grid.innerHTML='<div class="empty">جارٍ تحميل الفيديوهات...</div>';
-
-const {data,error}=await supabaseClient
-.from("videos")
-.select("id,title,description,video_url,thumbnail_url,views,created_at,status")
-.eq("status","approved")
-.order("created_at",{ascending:false})
-.limit(60);
-
-if(error) {
-grid.innerHTML='<div class="empty">تعذر تحميل الفيديوهات. تحقق من سياسات القراءة في Supabase.</div>';
-setMessage("videoMessage",error.message,true);
-return;
-}
-
-videoCache=data || [];
-renderVideos(videoCache);
-}
-
-function renderVideos(items) {
-const grid=document.getElementById("videoGrid");
-
-if(!items.length) {
-grid.innerHTML='<div class="empty">لا توجد فيديوهات منشورة حالياً.</div>';
-return;
-}
-
-grid.innerHTML=items.map(v=>`
-<article class="video-card">
-<video controls preload="metadata" playsinline ${v.thumbnail_url ? `poster="${escapeHtml(v.thumbnail_url)}"` : ""}>
-<source src="${escapeHtml(v.video_url)}">
-متصفحك لا يدعم تشغيل الفيديو.
-</video>
-<div class="video-info">
-<h3>${escapeHtml(v.title)}</h3>
-<div class="muted">
-${Number(v.views||0).toLocaleString("ar")} مشاهدة
-·
-${v.created_at ? new Date(v.created_at).toLocaleDateString("ar") : ""}
-</div>
-${v.description ? `<p class="muted">${escapeHtml(v.description)}</p>` : ""}
-</div>
-</article>
-`).join("");
-
-filterVideos();
-}
-
-function filterVideos() {
-const term=document.getElementById("searchInput").value.trim().toLowerCase();
-
-let list=videoCache.filter(v=>
-(v.title||"").toLowerCase().includes(term) ||
-(v.description||"").toLowerCase().includes(term)
-);
-
-renderVideoCardsOnly(list);
-}
-
-function renderVideoCardsOnly(items) {
-const grid=document.getElementById("videoGrid");
-
-if(!items.length) {
-grid.innerHTML='<div class="empty">لا توجد نتائج مطابقة.</div>';
-return;
-}
-
-grid.innerHTML=items.map(v=>`
-<article class="video-card">
-<video controls preload="metadata" playsinline ${v.thumbnail_url ? `poster="${escapeHtml(v.thumbnail_url)}"` : ""}>
-<source src="${escapeHtml(v.video_url)}">
-</video>
-<div class="video-info">
-<h3>${escapeHtml(v.title)}</h3>
-<div class="muted">
-${Number(v.views||0).toLocaleString("ar")} مشاهدة
-·
-${v.created_at ? new Date(v.created_at).toLocaleDateString("ar") : ""}
-</div>
-${v.description ? `<p class="muted">${escapeHtml(v.description)}</p>` : ""}
-</div>
-</article>
-`).join("");
-}
-
-function chooseCategory(category,button) {
-currentCategory=category;
-
-document.querySelectorAll(".filters button").forEach(b=>{
-b.classList.remove("active");
-});
-
-if(button) button.classList.add("active");
-
-const labels={
-all:"أحدث الفيديوهات",
-sports:"فيديوهات الرياضة",
-news:"فيديوهات الأخبار",
-other:"فيديوهات متنوعة"
-};
-
-document.getElementById("videosTitle").textContent=labels[category] || labels.all;
-filterVideos();
-}
-
-function showSection(section,button) {
-const filterButton=document.querySelector(`.filters button[onclick*="${section==="all"?"all":section}"]`);
-
-if(section==="sports" || section==="news") {
-chooseCategory(section,filterButton);
-} else {
-chooseCategory("all",filterButton);
-}
-
-document.querySelectorAll("nav button").forEach(b=>{
-b.classList.remove("active");
-});
-
-if(button) button.classList.add("active");
-
-document.getElementById("videosSection").scrollIntoView({behavior:"smooth"});
-}
-
-async function loadAdminPanel() {
-if(!currentSession || !isAdmin) return;
-
-setMessage("adminMessage","جارٍ تحديث الإحصائيات والطلبات...");
-
-const [usersRes,videosRes,requestsRes]=await Promise.all([
-
-supabaseClient
-.from("profiles")
-.select("id",{count:"exact",head:true}),
-
-supabaseClient
-.from("videos")
-.select("id",{count:"exact",head:true})
-.eq("status","approved"),
-
-supabaseClient
-.from("monetization_requests")
-.select("id,user_id,channel_id,total_views,followers_count,status,created_at,review_note")
-.order("created_at",{ascending:false})
-.limit(100)
-
-]);
-
-document.getElementById("statUsers").textContent=
-usersRes.error ? "—" : Number(usersRes.count||0).toLocaleString("ar");
-
-document.getElementById("statVideos").textContent=
-videosRes.error ? "—" : Number(videosRes.count||0).toLocaleString("ar");
-
-const requests=requestsRes.data || [];
-
-document.getElementById("statPending").textContent=
-requestsRes.error ? "—" :
-requests.filter(r=>r.status==="pending").length.toLocaleString("ar");
-
-if(usersRes.error || videosRes.error) {
-setMessage("adminMessage","تعذر جلب بعض الإحصائيات.",true);
-} else if(requestsRes.error) {
-setMessage("adminMessage","تعذر قراءة طلبات تحقيق الدخل: "+requestsRes.error.message,true);
-} else {
-setMessage("adminMessage","تم تحديث البيانات.");
-}
-
-renderRequests(requests,requestsRes.error);
-}
-
-function renderRequests(requests,error) {
-const list=document.getElementById("requestList");
-
-if(error) {
-list.innerHTML='<div class="empty">لا يمكن قراءة الطلبات. تحقق من سياسة المدير في Supabase.</div>';
-return;
-}
-
-if(!requests.length) {
-list.innerHTML='<div class="empty">لا توجد طلبات تحقيق دخل حتى الآن.</div>';
-return;
-}
-
-const statusLabels={
-pending:"قيد المراجعة",
-approved:"مقبول",
-rejected:"مرفوض"
-};
-
-list.innerHTML=requests.map(r=>`
-<article class="request" data-request="${escapeHtml(r.id)}">
-
-<div class="request-top">
-<strong>طلب رقم: ${escapeHtml(r.id)}</strong>
-<span class="status ${escapeHtml(r.status)}">
-${statusLabels[r.status] || escapeHtml(r.status)}
-</span>
-</div>
-
-<div class="muted">
-معرّف المستخدم: ${escapeHtml(r.user_id)}<br>
-القناة: ${escapeHtml(r.channel_id || "غير محددة")}<br>
-المشاهدات: ${Number(r.total_views||0).toLocaleString("ar")}
-·
-المتابعون: ${Number(r.followers_count||0).toLocaleString("ar")}<br>
-تاريخ الطلب:
-${r.created_at ? new Date(r.created_at).toLocaleString("ar") : "—"}
-</div>
-
-<textarea class="field note" maxlength="1000" placeholder="اكتب ملاحظة المراجعة...">${escapeHtml(r.review_note||"")}</textarea>
-
-<div class="request-actions">
-<button class="success" onclick="reviewRequest('${escapeHtml(r.id)}','approved',this)">قبول الطلب</button>
-<button class="danger" onclick="reviewRequest('${escapeHtml(r.id)}','rejected',this)">رفض الطلب</button>
-</div>
-
-</article>
-`).join("");
-}
-
-async function reviewRequest(requestId,status,button) {
-if(!isAdmin || !currentSession) {
-return setMessage("adminMessage","ليس لديك صلاحية تنفيذ هذا الإجراء.",true);
-}
-
-const card=button.closest(".request");
-const review_note=card.querySelector("textarea").value.trim();
-const buttons=card.querySelectorAll("button");
-
-buttons.forEach(b=>b.disabled=true);
-
-setMessage("adminMessage","جارٍ حفظ قرار المراجعة...");
-
-try {
-
-const {error}=await supabaseClient
-.from("monetization_requests")
-.update({status,review_note})
-.eq("id",requestId);
-
-if(error) throw error;
-
-setMessage("adminMessage",
-status==="approved"
-? "تم قبول الطلب وحفظ الملاحظة."
-: "تم رفض الطلب وحفظ الملاحظة."
-);
-
-await loadAdminPanel();
-
-} catch(err) {
-
-setMessage("adminMessage",err.message || "تعذر حفظ القرار.",true);
-
-buttons.forEach(b=>b.disabled=false);
-}
-}
-
-supabaseClient.auth.onAuthStateChange((_event,session)=>{
-setTimeout(()=>refreshAuthUI(session),0);
-});
-
 (async function init(){
-await refreshAuthUI();
-await loadVideos();
+ await refreshAuth();
+ await loadVideos();
 })();
 </script>
-
 </body>
 </html>
