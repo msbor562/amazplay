@@ -66,6 +66,118 @@ video{max-height:360px}
  nav button{flex:1}
  .grid{grid-template-columns:1fr}
 }
+  /* AmazPlay Premium Homepage */
+:root{
+ --bg:#080d19;
+ --card:#111a2b;
+ --text:#f4f7ff;
+ --muted:#9ba9c0;
+ --primary:#7555f6;
+ --border:#26334a;
+ --input:#121d30;
+}
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,Tahoma,sans-serif;
+}
+header{
+ background:#0b1221ee;
+ backdrop-filter:blur(16px);
+ border-bottom:1px solid var(--border);
+ padding:13px 4%;
+}
+.logo{font-size:27px;font-weight:900;color:#a48cff}
+nav{gap:8px}
+nav button{
+ border-radius:12px;
+ padding:11px 15px;
+}
+.container{max-width:1350px;padding:25px}
+.hero{
+ position:relative;
+ overflow:hidden;
+ min-height:290px;
+ border:1px solid #5945a8;
+ border-radius:25px;
+ padding:40px;
+ background:linear-gradient(115deg,#151c42,#38227d,#7549e9);
+ box-shadow:0 15px 45px #0005;
+}
+.hero h1{font-size:36px;margin-bottom:15px}
+.hero p{font-size:18px;line-height:2;color:#e4e1ff}
+.hero button{
+ background:white;
+ color:#4930b2;
+ padding:15px 25px;
+ border-radius:13px;
+}
+.section-title{margin:35px 0 20px}
+.section-title h2{font-size:25px}
+#searchInput{
+ max-width:100%;
+ border-radius:15px;
+ padding:16px;
+}
+#videoGrid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+ gap:22px;
+}
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:18px;
+ overflow:hidden;
+ transition:.25s;
+}
+.card:hover{
+ transform:translateY(-5px);
+ border-color:#8065f7;
+}
+.video-box{
+ width:100%;
+ aspect-ratio:16/9;
+ object-fit:cover;
+ background:#050914;
+}
+.card-body{padding:17px}
+.card-body h3{font-size:17px;line-height:1.7}
+.muted{color:var(--muted)}
+.panel{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:18px;
+}
+.message{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:13px;
+}
+button.secondary{
+ background:#17233a;
+ color:white;
+ border:1px solid #35435f;
+}
+input,textarea,select{
+ background:var(--input);
+ color:white;
+ border-color:var(--border);
+ border-radius:12px;
+}
+footer{
+ border-top:1px solid var(--border);
+ background:#0b1221;
+}
+@media(max-width:600px){
+ .container{padding:13px}
+ .hero{padding:24px 19px;min-height:240px}
+ .hero h1{font-size:27px}
+ .hero p{font-size:15px}
+ nav{gap:5px}
+ nav button{padding:9px 10px;font-size:13px}
+ #videoGrid{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
