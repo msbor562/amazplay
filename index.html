@@ -7,7 +7,119 @@
 <title>AmazPlay - منصة الفيديو والترفيه</title>
 <meta name="description" content="AmazPlay منصة عربية لمشاركة الفيديوهات والأخبار والرياضة والترفيه.">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
+/* AmazPlay Premium Homepage */
+:root{
+ --bg:#080d19;
+ --card:#111a2b;
+ --text:#f4f7ff;
+ --muted:#9ba9c0;
+ --primary:#7555f6;
+ --border:#26334a;
+ --input:#121d30;
+}
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,Tahoma,sans-serif;
+}
+header{
+ background:#0b1221ee;
+ backdrop-filter:blur(16px);
+ border-bottom:1px solid var(--border);
+ padding:13px 4%;
+}
+.logo{font-size:27px;font-weight:900;color:#a48cff}
+nav{gap:8px}
+nav button{
+ border-radius:12px;
+ padding:11px 15px;
+}
+.container{max-width:1350px;padding:25px}
+.hero{
+ position:relative;
+ overflow:hidden;
+ min-height:290px;
+ border:1px solid #5945a8;
+ border-radius:25px;
+ padding:40px;
+ background:linear-gradient(115deg,#151c42,#38227d,#7549e9);
+ box-shadow:0 15px 45px #0005;
+}
+.hero h1{font-size:36px;margin-bottom:15px}
+.hero p{font-size:18px;line-height:2;color:#e4e1ff}
+.hero button{
+ background:white;
+ color:#4930b2;
+ padding:15px 25px;
+ border-radius:13px;
+}
+.section-title{margin:35px 0 20px}
+.section-title h2{font-size:25px}
+#searchInput{
+ max-width:100%;
+ border-radius:15px;
+ padding:16px;
+}
+#videoGrid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+ gap:22px;
+}
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:18px;
+ overflow:hidden;
+ transition:.25s;
+}
+.card:hover{
+ transform:translateY(-5px);
+ border-color:#8065f7;
+}
+.video-box{
+ width:100%;
+ aspect-ratio:16/9;
+ object-fit:cover;
+ background:#050914;
+}
+.card-body{padding:17px}
+.card-body h3{font-size:17px;line-height:1.7}
+.muted{color:var(--muted)}
+.panel{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:18px;
+}
+.message{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:13px;
+}
+button.secondary{
+ background:#17233a;
+ color:white;
+ border:1px solid #35435f;
+}
+input,textarea,select{
+ background:var(--input);
+ color:white;
+ border-color:var(--border);
+ border-radius:12px;
+}
+footer{
+ border-top:1px solid var(--border);
+ background:#0b1221;
+}
+@media(max-width:600px){
+ .container{padding:13px}
+ .hero{padding:24px 19px;min-height:240px}
+ .hero h1{font-size:27px}
+ .hero p{font-size:15px}
+ nav{gap:5px}
+ nav button{padding:9px 10px;font-size:13px}
+ #videoGrid{grid-template-columns:1fr}
+}
+ <style>
 :root{
  --bg:#f5f6fa;--card:#fff;--text:#202334;--muted:#747b8d;
  --primary:#7048e8;--border:#e7e8ef;--input:#f7f7fb;
@@ -82,25 +194,50 @@ video{max-height:360px}
 
 <main class="container">
 <section id="homePage">
+
  <div class="hero">
-  <h1>مرحباً بك في AmazPlay</h1>
-  <p>منصتك لمشاهدة ومشاركة الفيديوهات والأخبار والرياضة والترفيه.</p>
-  <button onclick="openUpload()">＋ ارفع فيديوك</button>
+  <h1>اكتشف عالم AmazPlay ▶</h1>
+  <p>
+   شاهد أحدث الفيديوهات، تابع الأخبار والرياضة،
+   واكتشف محتوى مميزاً من صناع المحتوى.
+  </p>
+  <button onclick="openUpload()">
+   ＋ شارك فيديوك الآن
+  </button>
  </div>
+
  <div class="section-title">
-  <h2>اكتشف الفيديوهات</h2>
-  <input id="searchInput" placeholder="ابحث عن فيديو..." style="max-width:280px" oninput="renderVideos()">
+  <h2>⌕ اكتشف المحتوى</h2>
  </div>
- <div class="row" style="margin-bottom:15px">
-  <button class="secondary" onclick="filterVideos('all')">الكل</button>
+
+ <input
+  id="searchInput"
+  placeholder="ابحث عن فيديو أو محتوى..."
+  oninput="renderVideos()"
+ >
+
+ <div class="section-title">
+  <h2>التصنيفات حسب اللغة</h2>
+ </div>
+
+ <div class="row" style="margin-bottom:25px">
+  <button onclick="filterVideos('all')">الكل</button>
   <button class="secondary" onclick="filterVideos('ar')">العربية</button>
   <button class="secondary" onclick="filterVideos('fr')">الفرنسية</button>
   <button class="secondary" onclick="filterVideos('en')">الإنجليزية</button>
  </div>
- <div id="videoGrid" class="grid"></div>
- <div id="homeMessage" class="message">جارٍ تحميل الفيديوهات...</div>
-</section>
 
+ <div class="section-title">
+  <h2>▶ أحدث الفيديوهات</h2>
+ </div>
+
+ <div id="videoGrid" class="grid"></div>
+
+ <div id="homeMessage" class="message">
+  جارٍ تحميل الفيديوهات...
+ </div>
+
+</section>
 <section id="channelPage" class="hidden">
  <div class="section-title">
   <h2>لوحة قناتي</h2>
