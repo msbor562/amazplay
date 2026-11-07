@@ -667,29 +667,95 @@ async function loadChannel(){
     <div id="monetizationMessage" class="message"></div>
    </div>
    <div class="panel"><h3>فيديوهاتي</h3><div id="myVideos"></div></div>`;
+  
   const myList=$("myVideos");
-  if(!videos.length)myList.textContent="لم ترفع أي فيديو بعد.";
+
+  if(!videos.length){
+   myList.textContent="لم ترفع أي فيديو بعد.";
+  }
+
   videos.forEach(v=>{
-   const item=document.createElement("div");item.className="message";
-   item.textContent=(v.title||"بدون عنوان")+" — "+statusArabic(v.status)+" — "+Number(v.views||0).toLocaleString("ar")+" مشاهدة";
+   const item=document.createElement("div");
+   item.className="message";
+
+   const info=document.createElement("p");
+   info.textContent=(v.title||"بدون عنوان")+" — "+
+    statusArabic(v.status)+" — "+
+    Number(v.views||0).toLocaleString("ar")+" مشاهدة";
+
+   const deleteButton=document.createElement("button");
+   deleteButton.textContent="حذف الفيديو نهائياً";
+   deleteButton.className="danger";
+   deleteButton.onclick=()=>deleteMyVideo(v);
+
+   item.append(info,deleteButton);
    myList.append(item);
   });
- }catch(e){$("channelContent").innerHTML='<div class="message">تعذر تحميل القناة: '+escapeHTML(e.message)+'</div>';}
+
+ }catch(e){
+  $("channelContent").innerHTML=
+   '<div class="message">تعذر تحميل القناة: '+
+   escapeHTML(e.message)+'</div>';
+ }
 }
-async function submitMonetization(views,followers){
- if(!currentUser||!currentChannel)return;
- const {data:existing,error:checkError}=await db.from("monetization_requests").select("id,status").eq("user_id",currentUser.id).eq("status","pending").limit(1);
- if(checkError){msg("monetizationMessage",checkError.message,true);return;}
- if(existing?.length){msg("monetizationMessage","لديك طلب قيد المراجعة بالفعل.");return;}
- const note=$("monetizationNote").value.trim();
- const {error}=await db.from("monetization_requests").insert({
-  user_id:currentUser.id,channel_id:currentChannel.id,
-  total_views:views,followers_count:followers,status:"pending",review_note:note
- });
- if(error){msg("monetizationMessage","تعذر إرسال الطلب: "+error.message,true);return;}
- msg("monetizationMessage","تم إرسال طلبك بنجاح. ستتم مراجعته من الإدارة.");
- await loadChannel();
+
+async function deleteMyVideo(v){
+ if(!currentUser)return;
+
+ if(v.user_id!==currentUser.id){
+  alert("لا يمكنك حذف فيديو لا تملكه.");
+  return;
+ }
+
+ if(!confirm("هل أنت متأكد؟ سيتم حذف الفيديو نهائياً."))return;
+
+ try{
+  const {data:deleted,error:deleteError}=await db
+   .from("videos")
+   .delete()
+   .eq("id",v.id)
+   .eq("user_id",currentUser.id)
+   .select("id");
+
+  if(deleteError)throw deleteError;
+
+  if(!deleted||!deleted.length){
+   throw new Error("لم يتم حذف الفيديو. تحقق من صلاحيات قاعدة البيانات.");
+  }
+
+  const marker="/storage/v1/object/public/videos/";
+
+  const paths=[v.video_url,v.thumbnail_url]
+   .filter(Boolean)
+   .map(url=>{
+    const index=url.indexOf(marker);
+    if(index===-1)return null;
+    return decodeURIComponent(url.substring(index+marker.length).split("?")[0]);
+   })
+   .filter(path=>path&&path.startsWith(currentUser.id+"/"));
+
+  if(paths.length){
+   const {error:storageError}=await db.storage
+    .from("videos")
+    .remove(paths);
+
+   if(storageError){
+    alert("حُذف سجل الفيديو، لكن تعذر حذف بعض الملفات من التخزين: "+storageError.message);
+    await loadChannel();
+    await loadVideos();
+    return;
+   }
+  }
+
+  alert("تم حذف الفيديو وصورته المصغّرة بنجاح.");
+  await loadChannel();
+  await loadVideos();
+
+ }catch(e){
+  alert("تعذر حذف الفيديو: "+e.message);
+ }
 }
+
 function statusArabic(s){
  return ({pending:"قيد المراجعة",approved:"مقبول",rejected:"مرفوض"})[s]||s||"غير معروف";
 }
