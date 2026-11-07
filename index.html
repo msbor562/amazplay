@@ -443,6 +443,7 @@ async function uploadVideo(){
  const title=$("videoTitle").value.trim();
  const description=$("videoDescription").value.trim();
  const file=$("videoFile").files[0];
+ const thumbnailFile=$("thumbnailFile").files[0];
  if(!title||!file){msg("uploadMessage","أدخل عنوان الفيديو واختر الملف.",true);return;}
  if(!file.type.startsWith("video/")){msg("uploadMessage","الملف المختار ليس فيديو.",true);return;}
  $("uploadButton").disabled=true;
