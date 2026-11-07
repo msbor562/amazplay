@@ -699,10 +699,18 @@ async function loadChannel(){
  }
 }
 
-async function  if(!deleted||!deleted.length){
-   throw new Error("لم يتم حذف الفيديو. تحقق من صلاحيات قاعدة البيانات.");
-  }
 
+async function deleteMyVideo(v){
+ if(!currentUser)return;
+
+ if(v.user_id!==currentUser.id){
+  alert("لا يمكنك حذف فيديو لا تملكه.");
+  return;
+ }
+
+ if(!confirm("هل أنت متأكد؟ سيتم حذف الفيديو نهائياً؟"))return;
+
+ try{
   const marker="/storage/v1/object/public/videos/";
 
   const paths=[v.video_url,v.thumbnail_url]
@@ -713,6 +721,19 @@ async function  if(!deleted||!deleted.length){
     return decodeURIComponent(url.substring(index+marker.length).split("?")[0]);
    })
    .filter(path=>path&&path.startsWith(currentUser.id+"/"));
+
+  const {data:deleted,error:deleteError}=await db
+   .from("videos")
+   .delete()
+   .eq("id",v.id)
+   .eq("user_id",currentUser.id)
+   .select("id");
+
+  if(deleteError)throw deleteError;
+
+  if(!deleted||!deleted.length){
+   throw new Error("لم يتم حذف الفيديو. تحقق من صلاحيات قاعدة البيانات.");
+  }
 
   if(paths.length){
    const {error:storageError}=await db.storage
@@ -736,14 +757,183 @@ async function  if(!deleted||!deleted.length){
  }
 }
 
-  alert("تم حذف الفيديو وصورته المصغّرة بنجاح.");
-  await loadChannel();
-  await loadVideos();
-
- }catch(e){
-  alert("تعذر حذف الفيديو: "+e.message);
- }
+function statusArabic(s){
+ return ({pending:"قيد المراجعة",approved:"مقبول",rejected:"مرفوض"})[s]||s||"غير معروف";
 }
+
+function escapeHTML(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function escapeAttr(s){
+ return escapeHTML(s);
+}
+
+async function loadAdmin(){
+ const {data:profile,error:profileError}=await db
+  .from("profiles")
+  .select("role")
+  .eq("id",currentUser?.id||"")
+  .maybeSingle();
+
+ if(profileError||profile?.role!=="admin"){
+  $("adminPage").innerHTML="<h2>غير مصرح لك بالدخول إلى لوحة الإدارة.</h2>";
+  return;
+ }
+
+ const [usersRes,videosRes,requestsRes,pendingRes]=await Promise.all([
+  db.from("profiles").select("*",{count:"exact",head:true}),
+  db.from("videos").select("*",{count:"exact",head:true}).eq("status","approved"),
+  db.from("monetization_requests").select("*").order("created_at",{ascending:false}),
+  db.from("videos").select("*").eq("status","pending").order("created_at",{ascending:false})
+ ]);
+
+ $("statUsers").textContent=usersRes.error?"—":(usersRes.count||0).toLocaleString("ar");
+ $("statVideos").textContent=videosRes.error?"—":(videosRes.count||0).toLocaleString("ar");
+
+ const requests=requestsRes.data||[];
+
+ $("statPending").textContent=requestsRes.error?"—":
+  requests.filter(r=>r.status==="pending").length.toLocaleString("ar");
+
+ if(usersRes.error||videosRes.error){
+  msg("adminMessage","تعذر جلب بعض الإحصائيات.",true);
+ }else if(requestsRes.error){
+  msg("adminMessage","تعذر قراءة الطلبات: "+requestsRes.error.message,true);
+ }else{
+  msg("adminMessage","تم تحديث البيانات.");
+ }
+
+ renderRequests(requests,requestsRes.error);
+ renderPendingVideos(pendingRes.data||[],pendingRes.error);
+}
+
+function renderRequests(requests,error){
+ const list=$("requestList");
+ list.innerHTML="";
+
+ if(error){
+  list.textContent="تعذر تحميل الطلبات.";
+  return;
+ }
+
+ if(!requests.length){
+  list.textContent="لا توجد طلبات حالياً.";
+  return;
+ }
+
+ requests.forEach(r=>{
+  const box=document.createElement("div");
+  box.className="panel";
+
+  const info=document.createElement("p");
+  info.textContent="المستخدم: "+r.user_id+
+   " | المشاهدات: "+r.total_views+
+   " | المتابعون: "+r.followers_count+
+   " | الحالة: "+statusArabic(r.status);
+
+  const note=document.createElement("textarea");
+  note.placeholder="ملاحظة الإدارة";
+  note.value=r.review_note||"";
+
+  const approve=document.createElement("button");
+  approve.textContent="قبول";
+  approve.onclick=()=>reviewRequest(r.id,"approved",note.value);
+
+  const reject=document.createElement("button");
+  reject.textContent="رفض";
+  reject.className="danger";
+  reject.onclick=()=>reviewRequest(r.id,"rejected",note.value);
+
+  box.append(info,note,approve,reject);
+  list.append(box);
+ });
+}
+
+async function reviewRequest(id,status,note){
+ const {error}=await db
+  .from("monetization_requests")
+  .update({status,review_note:note})
+  .eq("id",id);
+
+ if(error){
+  msg("adminMessage","تعذر تحديث الطلب: "+error.message,true);
+  return;
+ }
+
+ msg("adminMessage","تم تحديث الطلب.");
+ await loadAdmin();
+}
+
+function renderPendingVideos(videos,error){
+ const list=$("pendingVideos");
+ list.innerHTML="";
+
+ if(error){
+  list.textContent="تعذر تحميل الفيديوهات المعلقة.";
+  return;
+ }
+
+ if(!videos.length){
+  list.textContent="لا توجد فيديوهات معلقة.";
+  return;
+ }
+
+ videos.forEach(v=>{
+  const box=document.createElement("div");
+  box.className="panel";
+
+  const title=document.createElement("p");
+  title.textContent=v.title||"بدون عنوان";
+
+  const link=document.createElement("a");
+  link.href=v.video_url;
+  link.target="_blank";
+  link.rel="noopener";
+  link.textContent="مشاهدة الفيديو";
+
+  const approve=document.createElement("button");
+  approve.textContent="قبول الفيديو";
+  approve.onclick=()=>reviewVideo(v.id,"approved");
+
+  const reject=document.createElement("button");
+  reject.textContent="رفض الفيديو";
+  reject.className="danger";
+  reject.onclick=()=>reviewVideo(v.id,"rejected");
+
+  box.append(title,link,document.createElement("br"),approve,reject);
+  list.append(box);
+ });
+}
+
+async function reviewVideo(id,status){
+ const {error}=await db
+  .from("videos")
+  .update({status})
+  .eq("id",id);
+
+ if(error){
+  msg("adminMessage","تعذر تحديث الفيديو: "+error.message,true);
+  return;
+ }
+
+ msg("adminMessage","تم تحديث حالة الفيديو.");
+ await loadAdmin();
+ await loadVideos();
+}
+
+db.auth.onAuthStateChange((_event,session)=>{
+ setTimeout(async()=>{
+  currentUser=session?.user||null;
+  await refreshAuth();
+ },0);
+});
+
+(async function init(){
+ await refreshAuth();
+ await loadVideos();
+})();
+
 
 function statusArabic(s){
  return ({pending:"قيد المراجعة",approved:"مقبول",rejected:"مرفوض"})[s]||s||"غير معروف";
