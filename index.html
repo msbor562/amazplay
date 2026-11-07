@@ -699,27 +699,7 @@ async function loadChannel(){
  }
 }
 
-async function deleteMyVideo(v){
- if(!currentUser)return;
-
- if(v.user_id!==currentUser.id){
-  alert("لا يمكنك حذف فيديو لا تملكه.");
-  return;
- }
-
- if(!confirm("هل أنت متأكد؟ سيتم حذف الفيديو نهائياً."))return;
-
- try{
-  const {data:deleted,error:deleteError}=await db
-   .from("videos")
-   .delete()
-   .eq("id",v.id)
-   .eq("user_id",currentUser.id)
-   .select("id");
-
-  if(deleteError)throw deleteError;
-
-  if(!deleted||!deleted.length){
+async function  if(!deleted||!deleted.length){
    throw new Error("لم يتم حذف الفيديو. تحقق من صلاحيات قاعدة البيانات.");
   }
 
@@ -740,12 +720,21 @@ async function deleteMyVideo(v){
     .remove(paths);
 
    if(storageError){
-    alert("حُذف سجل الفيديو، لكن تعذر حذف بعض الملفات من التخزين: "+storageError.message);
+    alert("حُذف سجل الفيديو، لكن تعذر حذف بعض الملفات: "+storageError.message);
     await loadChannel();
     await loadVideos();
     return;
    }
   }
+
+  alert("تم حذف الفيديو وصورته المصغّرة بنجاح.");
+  await loadChannel();
+  await loadVideos();
+
+ }catch(e){
+  alert("تعذر حذف الفيديو: "+e.message);
+ }
+}
 
   alert("تم حذف الفيديو وصورته المصغّرة بنجاح.");
   await loadChannel();
