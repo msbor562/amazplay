@@ -438,35 +438,96 @@ function renderVideos(){
   body.append(title,channel,views);card.append(video,body);$("videoGrid").append(card);
  });
 }
+
 async function uploadVideo(){
  if(!currentUser){openAuth();return;}
+
  const title=$("videoTitle").value.trim();
  const description=$("videoDescription").value.trim();
  const file=$("videoFile").files[0];
  const thumbnailFile=$("thumbnailFile").files[0];
- if(!title||!file){msg("uploadMessage","أدخل عنوان الفيديو واختر الملف.",true);return;}
- if(!file.type.startsWith("video/")){msg("uploadMessage","الملف المختار ليس فيديو.",true);return;}
+
+ if(!title||!file){
+  msg("uploadMessage","أدخل عنوان الفيديو واختر الملف.",true);
+  return;
+ }
+
+ if(!file.type.startsWith("video/")){
+  msg("uploadMessage","الملف المختار ليس فيديو.",true);
+  return;
+ }
+
+ if(thumbnailFile&&!thumbnailFile.type.startsWith("image/")){
+  msg("uploadMessage","اختر صورة صحيحة.",true);
+  return;
+ }
+
  $("uploadButton").disabled=true;
- msg("uploadMessage","جارٍ رفع الفيديو... لا تغلق الصفحة.");
+ msg("uploadMessage","جارٍ رفع الفيديو والصورة... لا تغلق الصفحة.");
+
  try{
   const channel=await ensureChannel();
+
   const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
   const path=currentUser.id+"/"+Date.now()+"_"+safeName;
-  const {error:storageError}=await db.storage.from("videos").upload(path,file,{contentType:file.type,upsert:false});
+
+  const {error:storageError}=await db.storage.from("videos").upload(
+   path,file,
+   {contentType:file.type,upsert:false}
+  );
+
   if(storageError)throw storageError;
+
   const {data:publicData}=db.storage.from("videos").getPublicUrl(path);
+
+  let thumbnailUrl=null;
+
+  if(thumbnailFile){
+   const imageName=thumbnailFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+   const imagePath=currentUser.id+"/thumbnails/"+Date.now()+"_"+imageName;
+
+   const {error:imageError}=await db.storage.from("videos").upload(
+    imagePath,thumbnailFile,
+    {contentType:thumbnailFile.type,upsert:false}
+   );
+
+   if(imageError)throw imageError;
+
+   const {data:imageData}=db.storage.from("videos").getPublicUrl(imagePath);
+   thumbnailUrl=imageData.publicUrl;
+  }
+
   const {error:insertError}=await db.from("videos").insert({
-   user_id:currentUser.id,channel_id:channel.id,title,description,
-   video_url:publicData.publicUrl,language:$("videoLanguage").value,
-   status:"pending",views:0
+   user_id:currentUser.id,
+   channel_id:channel.id,
+   title,
+   description,
+   video_url:publicData.publicUrl,
+   thumbnail_url:thumbnailUrl,
+   language:$("videoLanguage").value,
+   status:"pending",
+   views:0
   });
+
   if(insertError)throw insertError;
-  msg("uploadMessage","تم رفع الفيديو وإرساله إلى الإدارة للمراجعة.");
-  $("videoTitle").value="";$("videoDescription").value="";$("videoFile").value="";
+
+  msg("uploadMessage","تم رفع الفيديو والصورة وإرسالهما إلى الإدارة للمراجعة.");
+
+  $("videoTitle").value="";
+  $("videoDescription").value="";
+  $("videoFile").value="";
+  $("thumbnailFile").value="";
+
   await loadChannel();
- }catch(e){msg("uploadMessage","حدث خطأ: "+e.message,true);}
- finally{$("uploadButton").disabled=false;}
+
+ }catch(e){
+  msg("uploadMessage","حدث خطأ: "+e.message,true);
+ }
+ finally{
+  $("uploadButton").disabled=false;
+ }
 }
+
 async function uploadChannelImage(inputId,field){
  const file=$(inputId).files[0];
  if(!file||!currentUser)return;
