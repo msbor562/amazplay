@@ -744,6 +744,8 @@ card.dataset.videoId=String(v.id);
   const media=document.createElement("div");
 
   function showPlayer(){
+
+     history.pushState(null,"","?video="+encodeURIComponent(v.id));                                  
    const player=document.createElement("video");
    player.className="video-box";
    player.controls=true;
