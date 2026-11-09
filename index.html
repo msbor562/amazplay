@@ -740,7 +740,7 @@ function renderVideos(){
  list.forEach(v=>{
   const card=document.createElement("article");
   card.className="card";
-
+card.dataset.videoId=String(v.id);
   const media=document.createElement("div");
 
   function showPlayer(){
