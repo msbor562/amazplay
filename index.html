@@ -1355,10 +1355,37 @@ db.auth.onAuthStateChange((_event,session)=>{
  },0);
 });
 
+function openVideoFromUrl(){
+ const videoId=new URLSearchParams(location.search).get("video");
+ if(!videoId)return;
+
+ const card=Array.from(document.querySelectorAll(".card"))
+  .find(el=>el.dataset.videoId===videoId);
+
+ if(card){
+  const trigger=card.querySelector(".video-box");
+  if(trigger)trigger.click();
+ }
+}
+
+function openVideoFromUrl(){
+ const videoId=new URLSearchParams(location.search).get("video");
+ if(!videoId)return;
+
+ const card=Array.from(document.querySelectorAll(".card"))
+  .find(el=>el.dataset.videoId===videoId);
+
+ if(card){
+  const trigger=card.querySelector(".video-box");
+  if(trigger)trigger.click();
+ }
+}
+
 (async function init(){
  applyTranslations();
  await refreshAuth();
  await loadVideos();
+ openVideoFromUrl();
 })();
 </script>
 </body>
