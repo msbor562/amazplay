@@ -558,20 +558,18 @@ function openUpload(){
 function toggleTheme(){document.body.classList.toggle("light");}
 
 function showPage(page){
- ["homePage","channelPage","adminPage"].forEach(id=>$(id).classList.add("hidden"));
+ ["homePage","channelPage","adminPage","advertisePage"].forEach(id=>{
+  const section=$(id);
+  if(section)section.classList.add("hidden");
+ });
+
  const target=$(page+"Page");
  if(target)target.classList.remove("hidden");
+
  if(page==="channel")loadChannel();
  if(page==="admin")loadAdmin();
- window.scrollTo(0,0);
-}
 
-/* Authentication */
-function switchAuthMode(){
- authMode=authMode==="login"?"signup":"login";
- applyTranslations();
- $("signupFields").classList.toggle("hidden",authMode==="login");
- msg("authMessage","");
+ window.scrollTo(0,0);
 }
 
 async function submitAuth(){
