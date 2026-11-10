@@ -1313,19 +1313,13 @@ async function loadAdmin(){
   $("adminPage").innerHTML="<h2>Access denied.</h2>";
   return;
  }
-
- const [usersRes,videosRes,requestsRes,pendingRes]=await Promise.all([
-  db.from("profiles").select("*",{count:"exact",head:true}),
-  db.from("videos").select("*",{count:"exact",head:true}).eq("status","approved"),
-  db.from("monetization_requests").select("*").order("created_at",{ascending:false}),
-  db.from("videos").select("*").eq("status","pending").order("created_at",{ascending:false})
- ]);
-
- $("statUsers").textContent=usersRes.error?"—":(usersRes.count||0).toLocaleString();
- $("statVideos").textContent=videosRes.error?"—":(videosRes.count||0).toLocaleString();
-
- const requests=requestsRes.data||[];
- $("statPending").textContent=requestsRes.error?"—":
+const [usersRes,videosRes,requestsRes,pendingRes,advertiserRes]=await Promise.all([
+ db.from("profiles").select("*",{count:"exact",head:true}),
+ db.from("videos").select("*",{count:"exact",head:true}).eq("status","approved"),
+ db.from("monetization_requests").select("*").order("created_at",{ascending:false}),
+ db.from("videos").select("*").eq("status","pending").order("created_at",{ascending:false}),
+ db.from("advertiser_requests").select("*").order("created_at",{ascending:false})
+]);$("statPending").textContent=requestsRes.error?"—":
   requests.filter(r=>r.status==="pending").length.toLocaleString();
 
  if(usersRes.error||videosRes.error){
