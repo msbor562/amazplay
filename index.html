@@ -281,7 +281,45 @@ footer{
 
  <div class="panel">
   <p>روّج لشركتك أو منتجك عبر منصة AmazPlay.</p>
-  <p>املأ طلب الإعلان وسيتواصل معك فريق الإدارة.</p>
+  <p>املأ طلب الإعلان وسيتواصل معك فريق الإدارة.</p> 
+  <form id="advertiserForm" onsubmit="submitAdvertiserRequest(event)">
+
+ <label>اسم الشركة</label>
+ <input id="companyName" required placeholder="اسم الشركة">
+
+ <label>اسم المسؤول</label>
+ <input id="contactName" required placeholder="اسمك">
+
+ <label>البريد الإلكتروني</label>
+ <input id="advertiserEmail" type="email" required placeholder="البريد الإلكتروني">
+
+ <label>الموقع الإلكتروني</label>
+ <input id="advertiserWebsite" type="url" placeholder="رابط موقع الشركة">
+
+ <label>نوع الإعلان</label>
+ <select id="adFormat" required>
+  <option value="banner">إعلان صورة</option>
+  <option value="video">إعلان فيديو</option>
+  <option value="native">إعلان مدمج</option>
+ </select>
+
+ <label>مكان الإعلان</label>
+ <select id="adPlacement" required>
+  <option value="home_top">أعلى الصفحة الرئيسية</option>
+  <option value="home_between">بين الفيديوهات</option>
+  <option value="home_bottom">أسفل الصفحة الرئيسية</option>
+ </select>
+
+ <label>الميزانية المقترحة</label>
+ <input id="adBudget" placeholder="مثلاً: 10000 دج">
+
+ <label>تفاصيل الإعلان</label>
+ <textarea id="adMessage" placeholder="اكتب تفاصيل طلبك"></textarea>
+
+ <button type="submit" id="advertiserSubmit">إرسال طلب الإعلان</button>
+ <p id="advertiserMessage"></p>
+
+</form>
  </div>
 </section>
 <section id="channelPage" class="hidden">
