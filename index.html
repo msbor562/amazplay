@@ -1335,6 +1335,7 @@ const [usersRes,videosRes,requestsRes,pendingRes,advertiserRes]=await Promise.al
 }
 
 function renderRequests(requests,error){
+ renderAdvertiserRequests(advertiserRes.data||[],advertiserRes.error);
  const list=$("requestList");
  list.innerHTML="";
 
