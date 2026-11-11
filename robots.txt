@@ -1,1 +1,6 @@
 
+User-agent: *
+Allow: /
+
+Sitemap: https://msbor562.github.io/amazplay/sitemap.xml
+
