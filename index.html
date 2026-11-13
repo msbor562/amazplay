@@ -1,1476 +1,451 @@
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head> 
- <meta name="google-site-verification" content="p50Kiu7urr-mb8yjnl54xOpNKR4WBOI1T60DKnlBsso" />
+<html lang="ar" dir="rtl">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>AmazPlay - Watch, Share & Discover</title><meta name="description" content="AmazPlay - Discover videos, entertainment, sports and news from creators around the world.">
-<link rel="canonical" href="https://msbor562.github.io/amazplay/">
-<meta name="robots" content="index, follow">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="AmazPlay - Watch, Share & Discover">
-<meta property="og:description" content="Watch, share and discover videos on AmazPlay. Explore entertainment, sports and news from creators around the world.">
-<meta property="og:url" content="https://msbor562.github.io/amazplay/">
-<meta property="og:site_name" content="AmazPlay">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AmazPlay - Watch, Share & Discover">
-<meta name="twitter:description" content="Watch, share and discover videos on AmazPlay.">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": "https://msbor562.github.io/amazplay/#website",
-      "name": "AmazPlay",
-      "url": "https://msbor562.github.io/amazplay/",
-      "description": "Watch, share and discover videos, entertainment, sports and news from creators around the world.",
-      "inLanguage": "en"
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://msbor562.github.io/amazplay/#organization",
-      "name": "AmazPlay",
-      "url": "https://msbor562.github.io/amazplay/"
-    }
-  ]
-}
-</script>
- <meta name="theme-color" content="#080d19">
+<meta name="theme-color" content="#101827">
+<title>AmazPlay - منصة الفيديو</title>
+<meta name="description" content="AmazPlay منصة لمشاهدة ومشاركة الفيديوهات والأخبار والرياضة والترفيه.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3ac.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
- --bg:#080d19;--card:#111a2b;--text:#f4f7ff;
- --muted:#9ba9c0;--primary:#7555f6;--border:#26334a;
- --input:#121d30;--danger:#e04455;
-}
+:root{--bg:#101827;--panel:#1b2638;--text:#f5f7fb;--muted:#a8b3c5;--accent:#e53935;--line:#2d3a4e;--input:#111c2c}
+body.light{--bg:#f3f5f8;--panel:#fff;--text:#172033;--muted:#657187;--line:#e0e5ed;--input:#f5f7fa}
 *{box-sizing:border-box}
-body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,Tahoma,sans-serif;transition:.2s;
-}
-body.light{
- --bg:#f5f6fa;--card:#fff;--text:#202334;
- --muted:#747b8d;--border:#e7e8ef;--input:#f7f7fb;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif}
 button,input,textarea,select{font:inherit}
-button{
- cursor:pointer;border:0;border-radius:11px;padding:11px 16px;
- background:var(--primary);color:white;font-weight:bold;
-}
-button:disabled{opacity:.5;cursor:not-allowed}
-button.secondary{
- background:var(--input);color:var(--text);
- border:1px solid var(--border);
-}
-button.danger{background:var(--danger)}
-input,textarea,select{
- width:100%;padding:12px;border:1px solid var(--border);
- border-radius:11px;background:var(--input);color:var(--text);
- margin:6px 0 12px;
-}
+button{cursor:pointer;border:0;border-radius:9px;padding:10px 15px;background:var(--accent);color:white;font-weight:bold}
+button:disabled{opacity:.55;cursor:not-allowed}
+input,textarea,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid var(--line);border-radius:9px;background:var(--input);color:var(--text)}
 textarea{min-height:90px;resize:vertical}
-label{display:block;font-size:14px;font-weight:bold;margin-top:8px}
-header{
- position:sticky;top:0;z-index:5;background:#0b1221ee;
- backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
- padding:12px 4%;display:flex;align-items:center;
- justify-content:space-between;gap:12px;flex-wrap:wrap;
-}
-.logo{font-size:27px;font-weight:900;color:#a48cff}
-nav{display:flex;gap:7px;flex-wrap:wrap}
-nav button{padding:10px 13px}
-.container{max-width:1350px;margin:auto;padding:24px}
-.hero{
- min-height:280px;padding:40px;border:1px solid #5945a8;
- border-radius:24px;background:linear-gradient(115deg,#151c42,#38227d,#7549e9);
- box-shadow:0 15px 45px #0005;margin-bottom:25px;
-}
-.hero h1{font-size:36px;margin:0 0 15px}
-.hero p{font-size:17px;line-height:1.9;color:#e4e1ff}
-.hero button{background:white;color:#4930b2;padding:14px 23px}
-.section-title{
- display:flex;justify-content:space-between;align-items:center;
- gap:10px;flex-wrap:wrap;margin:28px 0 15px;
-}
-.section-title h2{font-size:23px}
-.grid{
- display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
- gap:20px;
-}
-.card{
- background:var(--card);border:1px solid var(--border);
- border-radius:17px;overflow:hidden;transition:.2s;
-}
-.card:hover{transform:translateY(-3px);border-color:#8065f7}
-.video-box{
- width:100%;aspect-ratio:16/9;object-fit:cover;
- display:block;background:#050914;
-}
-video{width:100%;max-height:380px;background:#000}
-.card-body{padding:15px}
-.card-body h3{font-size:16px;line-height:1.6}
+header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 4%;display:flex;align-items:center;gap:12px}
+.logo{font-size:24px;font-weight:900;color:#ff4949;cursor:pointer}
+.search{flex:1;max-width:600px;margin:auto}
+.search input{margin:0;border-radius:30px}
+.header-actions{display:flex;gap:7px;align-items:center}
+.secondary{background:#34445c}
+.danger{background:#bd3030}
+.success{background:#16834c}
+main{max-width:1250px;margin:auto;padding:20px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+nav button{background:var(--panel);border:1px solid var(--line);color:var(--text)}
+nav button.active{background:var(--accent);color:white}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:17px}
+.panel,.video-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.panel{padding:17px;margin-bottom:16px}
+.video-card{cursor:pointer}
+.thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#080d15;display:block}
+.video-info{padding:12px}
+.video-info h3{font-size:16px;margin:0 0 8px;line-height:1.5}
 .muted{color:var(--muted);font-size:13px}
-.panel{
- background:var(--card);border:1px solid var(--border);
- border-radius:17px;padding:18px;margin:15px 0;
-}
-.message{
- padding:12px;border-radius:11px;background:var(--input);
- border:1px solid var(--border);margin:10px 0;white-space:pre-wrap;
-}
-.hidden{display:none!important}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 .row>*{flex:1}
-.stat-grid{
- display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
- gap:12px;
-}
-.stat{background:var(--input);border-radius:12px;padding:17px;text-align:center}
-.stat strong{display:block;font-size:25px;color:var(--primary);margin-top:8px}
-.avatar{width:65px;height:65px;border-radius:50%;object-fit:cover;background:var(--input)}
-.banner{width:100%;height:170px;object-fit:cover;border-radius:12px;background:var(--input)}
-.modal{
- position:fixed;inset:0;background:#000b;z-index:20;
- display:flex;align-items:center;justify-content:center;padding:15px;
-}
-.modal-box{
- width:100%;max-width:480px;max-height:90vh;overflow:auto;
- background:var(--card);padding:22px;border-radius:17px;
-}
-footer{
- text-align:center;color:var(--muted);padding:28px;
- border-top:1px solid var(--border);background:#0b1221;
-}
-.language-wrap{width:145px}
-.language-wrap select{margin:0;padding:9px}
-.video-menu{position:relative;display:inline-block}
-.video-menu summary{
- cursor:pointer;list-style:none;font-size:23px;padding:3px 9px;
- border-radius:8px;background:var(--input);
-}
-.video-menu summary::-webkit-details-marker{display:none}
-.menu-content{
- position:absolute;z-index:4;right:0;top:35px;
- width:190px;background:var(--card);border:1px solid var(--border);
- border-radius:12px;padding:7px;box-shadow:0 8px 25px #0008;
-}
-.menu-content button{
- display:block;width:100%;text-align:start;margin:3px 0;
- background:transparent;color:var(--text);font-weight:normal;
-}
-.menu-content button:hover{background:var(--input)}
-.channel-video{
- display:flex;justify-content:space-between;align-items:center;
- gap:12px;flex-wrap:wrap;
-}
-.channel-video-info{flex:1;min-width:170px}
-.language-filter{display:flex;gap:8px;flex-wrap:wrap}
-.language-filter button{flex:1}
-#searchInput{padding:15px}
-@media(max-width:650px){
- header{padding:10px}
- .container{padding:13px}
- .hero{padding:23px 18px;min-height:230px}
- .hero h1{font-size:27px}
- .hero p{font-size:15px}
- nav{width:100%}
- nav button{flex:1;padding:9px 7px;font-size:12px}
- .grid{grid-template-columns:1fr}
- .language-wrap{width:100%}
-}
+.row button{flex:0 0 auto}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#000b;z-index:50;display:none;align-items:center;justify-content:center;padding:15px;overflow:auto}
+.modal.show{display:flex}
+.modal-box{width:100%;max-width:550px;max-height:94vh;overflow:auto;background:var(--panel);padding:20px;border-radius:15px}
+.close{float:left;background:#34445c}
+.message{padding:10px;border-radius:8px;margin:10px 0;background:#263b50}
+.error{background:#692b32}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--input);padding:15px;border-radius:10px;text-align:center}
+.stat strong{display:block;font-size:24px;color:#ff5555;margin-top:7px}
+video.player{width:100%;max-height:65vh;background:#000;border-radius:12px}
+.avatar{width:75px;height:75px;border-radius:50%;object-fit:cover;background:#34445c}
+.banner{width:100%;height:160px;object-fit:cover;border-radius:10px;background:#26364b}
+hr{border:0;border-top:1px solid var(--line);margin:17px 0}
+a{color:#70b7ff}
+.small-btn{padding:7px 10px;font-size:13px}
+footer{text-align:center;color:var(--muted);padding:30px}
+@media(max-width:600px){header{padding:10px;flex-wrap:wrap}.search{order:3;flex-basis:100%;max-width:none}.header-actions{margin-right:auto}main{padding:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.video-info{padding:9px}.video-info h3{font-size:14px}.logo{font-size:21px}}
 </style>
 </head>
-
 <body>
 
 <header>
- <div class="logo">▶ AmazPlay</div>
-
- <div class="language-wrap">
-  <select id="languageSelect" onchange="changeLanguage(this.value)" aria-label="Language">
-   <option value="en">🌐 English</option>
-   <option value="ar">🌐 العربية</option>
-   <option value="fr">🌐 Français</option>
-   <option value="es">Español</option>
-   <option value="pt">Português</option>
-   <option value="sv">Svenska</option>
-   <option value="da">Dansk</option>
-   <option value="no">Norsk</option>
-   <option value="is">Íslenska</option>
-   <option value="fi">Suomi</option>
-   <option value="de">Deutsch</option>
-   <option value="nl">Nederlands</option>
-   <option value="ga">Gaeilge</option>
-   <option value="ru">Русский</option>
-   <option value="hu">Magyar</option>
-   <option value="pl">Polski</option>
-   <option value="hr">Hrvatski</option>
-   <option value="lt">Lietuvių</option>
-   <option value="bg">Български</option>
-   <option value="be">Беларуская</option>
-   <option value="uk">Українська</option>
-   <option value="sr">Српски</option>
-   <option value="ro">Română</option>
-   <option value="cs">Čeština</option>
-   <option value="th">ไทย</option>
-   <option value="vi">Tiếng Việt</option>
-   <option value="ms">Bahasa Melayu</option>
-   <option value="fil">Filipino</option>
-   <option value="id">Bahasa Indonesia</option>
-   <option value="zh">中文</option>
-   <option value="ja">日本語</option>
-   <option value="ko">한국어</option>
-   <option value="hi">हिन्दी</option>
-  </select>
+ <div class="logo" onclick="showPage('home')">▶ AmazPlay</div>
+ <div class="search"><input id="searchInput" placeholder="ابحث عن فيديو..." oninput="renderVideos()"></div>
+ <div class="header-actions">
+  <button class="secondary small-btn" onclick="toggleTheme()">◐</button>
+  <button class="secondary small-btn" onclick="openAuth()">دخول</button>
  </div>
-
- <nav>
-  <button onclick="showPage('home')" data-i="home">Home</button>
-  <button onclick="showPage('channel')" data-i="myChannel">My Channel</button>
-<button onclick="showPage('advertise')" id="advertiseNav">أعلن معنا</button>
-  <button onclick="showPage('admin')" id="adminNav" class="hidden" data-i="admin">Admin</button>
-  <button class="secondary" onclick="toggleTheme()" title="Theme">◐</button>
-  <button onclick="openAuth()" id="authButton" data-i="login">Login</button>
-  <button class="secondary hidden" id="logoutButton" onclick="logout()" data-i="logout">Logout</button>
- </nav>
 </header>
 
-<main class="container">
-
-<section id="homePage">
- <div class="hero">
-  <h1 data-i="heroTitle">Discover AmazPlay</h1>
-  <p data-i="heroText">Watch videos, explore entertainment, sports and news, and discover creators from around the world.</p>
-  <button onclick="openUpload()" data-i="shareVideo">＋ Upload your video</button>
- </div>
-
- <div class="section-title">
-  <h2 data-i="discover">Discover content</h2>
- </div>
-
- <input id="searchInput" placeholder="Search videos..." oninput="renderVideos()" data-ph="search">
-
- <div class="section-title">
-  <h2 data-i="filterLanguage">Filter by language</h2>
- </div>
-
- <div class="language-filter">
-  <button onclick="filterVideos('all')" data-i="all">All</button>
-  <button class="secondary" onclick="filterVideos('ar')">Arabic</button>
-  <button class="secondary" onclick="filterVideos('fr')">French</button>
-  <button class="secondary" onclick="filterVideos('en')">English</button>
- </div>
-
- <div class="section-title">
-  <h2 data-i="latest">Latest videos</h2>
- </div>
-
- <div id="videoGrid" class="grid"></div>
- <div id="homeMessage" class="message">Loading videos...</div>
-</section>
-<section id="advertisePage" class="hidden">
- <div class="section-title">
-  <h2>أعلن معنا في AmazPlay</h2>
- </div>
-
- <div class="panel">
-  <p>روّج لشركتك أو منتجك عبر منصة AmazPlay.</p>
-  <p>املأ طلب الإعلان وسيتواصل معك فريق الإدارة.</p> 
-  <form id="advertiserForm" onsubmit="submitAdvertiserRequest(event)">
-
- <label>اسم الشركة</label>
- <input id="companyName" required placeholder="اسم الشركة">
-
- <label>اسم المسؤول</label>
- <input id="contactName" required placeholder="اسمك">
-
- <label>البريد الإلكتروني</label>
- <input id="advertiserEmail" type="email" required placeholder="البريد الإلكتروني">
-
- <label>الموقع الإلكتروني</label>
- <input id="advertiserWebsite" type="url" placeholder="رابط موقع الشركة">
-
- <label>نوع الإعلان</label>
- <select id="adFormat" required>
-  <option value="banner">إعلان صورة</option>
-  <option value="video">إعلان فيديو</option>
-  <option value="native">إعلان مدمج</option>
+<main>
+<nav>
+ <button id="navHome" class="active" onclick="showPage('home')">الرئيسية</button>
+ <button onclick="showPage('channel')">قناتي</button>
+ <button onclick="openUpload()">＋ رفع فيديو</button>
+ <button onclick="showPage('advertise')">الإعلانات</button>
+ <button id="navAdmin" class="hidden" onclick="showPage('admin')">الإدارة</button>
+ <button id="navLogout" class="hidden secondary" onclick="logout()">خروج</button>
+ <select id="languageFilter" style="width:auto;margin:0" onchange="renderVideos()">
+  <option value="all">كل اللغات</option>
+  <option value="ar">العربية</option>
+  <option value="fr">Français</option>
+  <option value="en">English</option>
  </select>
+</nav>
 
- <label>مكان الإعلان</label>
- <select id="adPlacement" required>
-  <option value="home_top">أعلى الصفحة الرئيسية</option>
-  <option value="home_between">بين الفيديوهات</option>
-  <option value="home_bottom">أسفل الصفحة الرئيسية</option>
- </select>
-
- <label>الميزانية المقترحة</label>
- <input id="adBudget" placeholder="مثلاً: 10000 دج">
-
- <label>تفاصيل الإعلان</label>
- <textarea id="adMessage" placeholder="اكتب تفاصيل طلبك"></textarea>
-
- <button type="submit" id="advertiserSubmit">إرسال طلب الإعلان</button>
- <p id="advertiserMessage"></p>
-
-</form>
+<section id="homePage" class="page active">
+ <div class="row" style="margin-bottom:15px">
+  <div><h2>اكتشف الفيديوهات</h2><p class="muted">شاهد وشارك أفضل الفيديوهات على AmazPlay</p></div>
+  <button onclick="loadVideos()">تحديث</button>
  </div>
-</section>
-<section id="channelPage" class="hidden">
- <div class="section-title">
-  <h2 data-i="myChannel">My Channel</h2>
-  <button onclick="openUpload()" data-i="upload">＋ Upload video</button>
- </div>
- <div id="channelContent" class="message">Please log in to view your channel.</div>
+ <div id="homeMessage" class="muted"></div>
+ <div id="videosGrid" class="grid"></div>
 </section>
 
-<section id="adminPage" class="hidden">
- <h2 data-i="adminPanel">Admin Dashboard</h2>
- <div class="stat-grid">
-  <div class="stat"><span data-i="users">Users</span><strong id="statUsers">—</strong></div>
-  <div class="stat"><span data-i="videos">Videos</span><strong id="statVideos">—</strong></div>
-  <div class="stat"><span data-i="pending">Pending</span><strong id="statPending">—</strong></div>
- </div>
+<section id="channelPage" class="page">
+ <div id="channelContent"><div class="panel">يرجى تسجيل الدخول لعرض قناتك.</div></div>
+</section>
+
+<section id="adminPage" class="page">
+ <h2>لوحة الإدارة</h2>
+ <div id="adminMessage"></div>
+ <div id="adminStats" class="stat-grid"></div>
+ <h3>الفيديوهات قيد المراجعة</h3>
+ <div id="pendingVideos"></div>
+ <h3>طلبات تحقيق الدخل</h3>
+ <div id="monetizationRequests"></div>
+ <h3>طلبات المعلنين</h3>
+ <div id="advertiserRequests"></div>
+</section>
+
+<section id="advertisePage" class="page">
  <div class="panel">
-  <h3 data-i="monetizationRequests">Monetization requests</h3>
-  <div id="requestList">Loading...</div>
- </div><div class="panel">
- <h3>طلبات إعلانات الشركات</h3>
- <div id="advertiserRequests">جارٍ تحميل طلبات الإعلانات...</div>
+  <h2>الإعلان على AmazPlay</h2>
+  <p class="muted">أرسل طلبك الإعلاني وسيتواصل معك فريق المنصة.</p>
+  <form id="advertiserForm">
+   <label>اسم الشركة</label><input id="companyName" required>
+   <label>اسم المسؤول</label><input id="contactName" required>
+   <label>البريد الإلكتروني</label><input id="advertiserEmail" type="email" required>
+   <label>الموقع الإلكتروني</label><input id="advertiserWebsite">
+   <label>نوع الإعلان</label>
+   <select id="adFormat"><option>إعلان فيديو</option><option>إعلان بانر</option><option>رعاية محتوى</option><option>أخرى</option></select>
+   <label>الميزانية المقترحة</label><input id="adBudget" placeholder="مثال: 100 دولار">
+   <label>تفاصيل الطلب</label><textarea id="adMessage"></textarea>
+   <button type="submit" id="advertiserSubmit">إرسال الطلب</button>
+   <div id="advertiserMessage"></div>
+  </form>
  </div>
- <div class="panel">
-  <h3 data-i="pendingVideos">Pending videos</h3>
-  <div id="pendingVideos">Loading...</div>
- </div>
- <div id="adminMessage" class="message"></div>
 </section>
-
 </main>
 
-<footer>AmazPlay © 2026</footer>
+<footer>© <span id="year"></span> AmazPlay — منصة الفيديو والترفيه</footer>
 
-<!-- Authentication -->
-<div id="authModal" class="modal hidden">
+<!-- تسجيل الدخول -->
+<div class="modal" id="authModal">
  <div class="modal-box">
-  <div class="section-title">
-   <h2 id="authTitle">Login</h2>
-   <button class="secondary" onclick="closeModal('authModal')">✕</button>
-  </div>
-  <div id="signupFields" class="hidden">
-   <label data-i="username">Username</label>
-   <input id="signupName" placeholder="Your name">
-  </div>
-  <label data-i="email">Email</label>
-  <input id="authEmail" type="email" placeholder="example@email.com">
-  <label data-i="password">Password</label>
-  <input id="authPassword" type="password">
-  <button id="authSubmit" onclick="submitAuth()" style="width:100%">Login</button>
-  <p id="authMessage" class="message"></p>
-  <button class="secondary" id="switchAuth" onclick="switchAuthMode()">Create account</button>
+  <button class="close" onclick="closeModal('authModal')">✕</button>
+  <h2 id="authTitle">تسجيل الدخول</h2>
+  <form id="authForm">
+   <div id="signupFields" class="hidden">
+    <label>اسم المستخدم</label><input id="signupName">
+   </div>
+   <label>البريد الإلكتروني</label><input id="authEmail" type="email" required>
+   <label>كلمة المرور</label><input id="authPassword" type="password" required minlength="6">
+   <button id="authSubmit" type="submit">دخول</button>
+   <button type="button" class="secondary" onclick="switchAuthMode()">إنشاء حساب / تسجيل الدخول</button>
+   <div id="authMessage"></div>
+  </form>
  </div>
 </div>
 
-<!-- Upload -->
-<div id="uploadModal" class="modal hidden">
+<!-- رفع فيديو -->
+<div class="modal" id="uploadModal">
  <div class="modal-box">
-  <div class="section-title">
-   <h2 data-i="uploadNew">Upload a new video</h2>
-   <button class="secondary" onclick="closeModal('uploadModal')">✕</button>
-  </div>
-  <label data-i="videoTitle">Video title</label>
-  <input id="videoTitle" placeholder="Enter video title">
-  <label data-i="description">Description</label>
-  <textarea id="videoDescription" placeholder="Describe your video"></textarea>
-  <label data-i="videoLanguage">Video language</label>
-  <select id="videoLanguage">
-   <option value="en">English</option>
-   <option value="ar">Arabic</option>
-   <option value="fr">French</option>
-   <option value="es">Spanish</option>
-   <option value="pt">Portuguese</option>
-   <option value="de">German</option>
-   <option value="other">Other</option>
-  </select>
-  <label data-i="thumbnail">Thumbnail image</label>
-  <input id="thumbnailFile" type="file" accept="image/*">
-  <label data-i="videoFile">Video file</label>
-  <input id="videoFile" type="file" accept="video/*">
-  <button id="uploadButton" onclick="uploadVideo()" style="width:100%" data-i="sendReview">Upload and submit for review</button>
-  <div id="uploadMessage" class="message"></div>
+  <button class="close" onclick="closeModal('uploadModal')">✕</button>
+  <h2>رفع فيديو جديد</h2>
+  <form id="uploadForm">
+   <label>عنوان الفيديو</label><input id="videoTitle" required maxlength="150">
+   <label>وصف الفيديو</label><textarea id="videoDescription"></textarea>
+   <label>لغة الفيديو</label>
+   <select id="videoLanguage"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select>
+   <label>ملف الفيديو</label><input id="videoFile" type="file" accept="video/*" required>
+   <label>الصورة المصغرة (اختياري)</label><input id="thumbnailFile" type="file" accept="image/*">
+   <button id="uploadButton" type="submit">رفع وإرسال للمراجعة</button>
+   <div id="uploadMessage"></div>
+  </form>
  </div>
 </div>
 
-<!-- Edit video -->
-<div id="editModal" class="modal hidden">
+<!-- تشغيل الفيديو -->
+<div class="modal" id="playerModal">
+ <div class="modal-box" style="max-width:850px">
+  <button class="close" onclick="closePlayer()">✕</button>
+  <div id="playerContent"></div>
+ </div>
+</div>
+
+<!-- تعديل الفيديو -->
+<div class="modal" id="editVideoModal">
  <div class="modal-box">
-  <div class="section-title">
-   <h2 data-i="editVideo">Edit video</h2>
-   <button class="secondary" onclick="closeModal('editModal')">✕</button>
-  </div>
-  <input type="hidden" id="editVideoId">
-  <label data-i="videoTitle">Video title</label>
-  <input id="editTitle">
-  <label data-i="description">Description</label>
-  <textarea id="editDescription"></textarea>
-  <label data-i="thumbnail">Change thumbnail</label>
-  <input id="editThumbnail" type="file" accept="image/*">
-  <p class="muted" data-i="thumbnailNote">Leave empty to keep the current thumbnail.</p>
-  <button id="saveVideoButton" onclick="saveVideoChanges()" style="width:100%" data-i="saveChanges">Save changes</button>
-  <div id="editMessage" class="message"></div>
+  <button class="close" onclick="closeModal('editVideoModal')">✕</button>
+  <h2>تعديل الفيديو</h2>
+  <form id="editVideoForm">
+   <input id="editVideoId" type="hidden">
+   <label>العنوان</label><input id="editVideoTitle" required>
+   <label>الوصف</label><textarea id="editVideoDescription"></textarea>
+   <label>لغة الفيديو</label>
+   <select id="editVideoLanguage"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select>
+   <label>تغيير الصورة المصغرة</label><input id="editThumbnail" type="file" accept="image/*">
+   <button type="submit">حفظ التعديلات</button>
+   <div id="editVideoMessage"></div>
+  </form>
  </div>
 </div>
 
 <script>
-/* Supabase configuration */
-const SUPABASE_URL="https://lkhlozhujogidcmfhmoj.supabase.co";
-const SUPABASE_KEY="sb_publishable_vf8uXMxJRS431TR8XNKDhA_5z6ivwis";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+/* إعداد Supabase */
+const SUPABASE_URL = "https://lkhlozhujogidcmfhmoj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vf8uXMxJRS431TR8XNKDhA_5z6ivwis";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser=null;
-let currentChannel=null;
-let allVideos=[];
-let languageFilter="all";
-let authMode="login";
-let currentLanguage="en";
-
-/* Interface translations */
-const translations={
- en:{
-  home:"Home",myChannel:"My Channel",admin:"Admin",login:"Login",logout:"Logout",
-  heroTitle:"Discover AmazPlay",heroText:"Watch videos, explore entertainment, sports and news, and discover creators from around the world.",
-  shareVideo:"＋ Upload your video",discover:"Discover content",search:"Search videos...",
-  filterLanguage:"Filter by language",all:"All",latest:"Latest videos",
-  upload:"＋ Upload video",adminPanel:"Admin Dashboard",users:"Users",videos:"Videos",
-  pending:"Pending",monetizationRequests:"Monetization requests",pendingVideos:"Pending videos",
-  username:"Username",email:"Email",password:"Password",uploadNew:"Upload a new video",
-  videoTitle:"Video title",description:"Description",videoLanguage:"Video language",
-  thumbnail:"Thumbnail image",videoFile:"Video file",sendReview:"Upload and submit for review",
-  editVideo:"Edit video",thumbnailNote:"Leave empty to keep the current thumbnail.",
-  saveChanges:"Save changes",edit:"Edit video",changeThumbnail:"Change thumbnail",
-  delete:"Delete video permanently",statusPending:"Pending review",statusApproved:"Approved",
-  statusRejected:"Rejected",views:"views",followers:"Followers",approvedVideos:"Approved videos",
-  channelName:"Channel name",channelDescription:"Channel description",channelImage:"Channel image",
-  bannerImage:"Channel banner",saveChannel:"Save channel changes",monetization:"Monetization",
-  monetizationInfo:"You can submit a request for review. Displayed figures do not guarantee approval or payment.",
-  monetizationLimit:"Suggested guideline: 100 followers and 1,000 approved video views.",
-  note:"Optional note",sendRequest:"Submit monetization request",myVideos:"My videos",
-  noVideos:"You have not uploaded any videos yet.",loading:"Loading...",
-  noContent:"No published videos yet.",loginFirst:"Please log in first.",
-  play:"▶ Play video",channel:"Channel",watch:"Watch video",approve:"Approve",
-  reject:"Reject",adminNote:"Admin note",noRequests:"No requests yet.",
-  noPending:"No pending videos.",notAllowed:"You cannot edit a video you do not own.",
-  deleteConfirm:"Are you sure? This video will be permanently deleted.",
-  deleted:"Video and thumbnail deleted successfully.",saved:"Changes saved successfully.",
-  uploadImage:"Upload image",uploadBanner:"Upload banner",loginRequired:"Please log in to view your channel.",
-  loginSuccess:"Login successful.",signup:"Create account",switchLogin:"I already have an account",
-  createAccount:"Create account",enterEmail:"Enter your email and password.",
-  enterUsername:"Enter a username.",checkEmail:"Account created. Check your email to confirm registration.",
-  loadingVideos:"Loading videos...",error:"Error: ",reviewSent:"Video uploaded and submitted for review.",
-  requestSent:"Your monetization request has been submitted.",
-  requestExists:"You already have a pending request.",
-  editTitle:"Edit title and description",chooseImage:"Choose a valid image file.",
-  save:"Save",cancel:"Cancel",channelStats:"Channel statistics"
- },
- ar:{
-  home:"الرئيسية",myChannel:"قناتي",admin:"الإدارة",login:"دخول",logout:"خروج",
-  heroTitle:"اكتشف AmazPlay",heroText:"شاهد الفيديوهات واكتشف الترفيه والرياضة والأخبار وصناع المحتوى من جميع أنحاء العالم.",
-  shareVideo:"＋ ارفع فيديوك",discover:"اكتشف المحتوى",search:"ابحث عن فيديو...",
-  filterLanguage:"تصفية حسب اللغة",all:"الكل",latest:"أحدث الفيديوهات",
-  upload:"＋ رفع فيديو",adminPanel:"لوحة الإدارة",users:"المستخدمون",videos:"الفيديوهات",
-  pending:"قيد الانتظار",monetizationRequests:"طلبات تحقيق الدخل",pendingVideos:"الفيديوهات المعلقة",
-  username:"اسم المستخدم",email:"البريد الإلكتروني",password:"كلمة المرور",uploadNew:"رفع فيديو جديد",
-  videoTitle:"عنوان الفيديو",description:"الوصف",videoLanguage:"لغة الفيديو",
-  thumbnail:"الصورة المصغرة",videoFile:"ملف الفيديو",sendReview:"رفع وإرسال للمراجعة",
-  editVideo:"تعديل الفيديو",thumbnailNote:"اترك الحقل فارغاً للاحتفاظ بالصورة الحالية.",
-  saveChanges:"حفظ التعديلات",edit:"تعديل الفيديو",changeThumbnail:"تغيير الصورة المصغرة",
-  delete:"حذف الفيديو نهائياً",statusPending:"قيد المراجعة",statusApproved:"مقبول",
-  statusRejected:"مرفوض",views:"مشاهدة",followers:"المتابعون",approvedVideos:"الفيديوهات المقبولة",
-  channelName:"اسم القناة",channelDescription:"وصف القناة",channelImage:"صورة القناة",
-  bannerImage:"غلاف القناة",saveChannel:"حفظ تعديلات القناة",monetization:"تحقيق الدخل",
-  monetizationInfo:"يمكنك إرسال طلب للمراجعة. الأرقام لا تضمن القبول أو الدفع.",
-  monetizationLimit:"الحد الاسترشادي: 100 متابع و1000 مشاهدة للفيديوهات المقبولة.",
-  note:"ملاحظة اختيارية",sendRequest:"إرسال طلب تحقيق الدخل",myVideos:"فيديوهاتي",
-  noVideos:"لم ترفع أي فيديو بعد.",loading:"جارٍ التحميل...",
-  noContent:"لا توجد فيديوهات منشورة حالياً.",loginFirst:"سجل الدخول أولاً.",
-  play:"▶ تشغيل الفيديو",channel:"القناة",watch:"مشاهدة الفيديو",approve:"قبول",
-  reject:"رفض",adminNote:"ملاحظة الإدارة",noRequests:"لا توجد طلبات حالياً.",
-  noPending:"لا توجد فيديوهات معلقة.",notAllowed:"لا يمكنك تعديل فيديو لا تملكه.",
-  deleteConfirm:"هل أنت متأكد؟ سيتم حذف الفيديو نهائياً.",
-  deleted:"تم حذف الفيديو والصورة المصغرة بنجاح.",saved:"تم حفظ التعديلات بنجاح.",
-  uploadImage:"رفع الصورة",uploadBanner:"رفع الغلاف",loginRequired:"سجل الدخول لعرض قناتك.",
-  loginSuccess:"تم تسجيل الدخول.",signup:"إنشاء حساب",switchLogin:"لدي حساب بالفعل",
-  createAccount:"إنشاء حساب",enterEmail:"أدخل البريد الإلكتروني وكلمة المرور.",
-  enterUsername:"أدخل اسم المستخدم.",checkEmail:"تم إنشاء الحساب. تحقق من بريدك لتأكيد التسجيل.",
-  loadingVideos:"جارٍ تحميل الفيديوهات...",error:"خطأ: ",reviewSent:"تم رفع الفيديو وإرساله للمراجعة.",
-  requestSent:"تم إرسال طلب تحقيق الدخل.",requestExists:"لديك طلب قيد المراجعة بالفعل.",
-  editTitle:"تعديل العنوان والوصف",chooseImage:"اختر صورة صحيحة.",
-  save:"حفظ",cancel:"إلغاء",channelStats:"إحصائيات القناة"
- },
- fr:{
-  home:"Accueil",myChannel:"Ma chaîne",admin:"Administration",login:"Connexion",logout:"Déconnexion",
-  heroTitle:"Découvrez AmazPlay",heroText:"Regardez des vidéos, découvrez le divertissement, le sport et l'actualité.",
-  shareVideo:"＋ Publier une vidéo",discover:"Découvrir le contenu",search:"Rechercher des vidéos...",
-  filterLanguage:"Filtrer par langue",all:"Tout",latest:"Dernières vidéos",
-  upload:"＋ Publier une vidéo",adminPanel:"Tableau de bord",users:"Utilisateurs",videos:"Vidéos",
-  pending:"En attente",monetizationRequests:"Demandes de monétisation",pendingVideos:"Vidéos en attente",
-  username:"Nom d'utilisateur",email:"E-mail",password:"Mot de passe",uploadNew:"Publier une vidéo",
-  videoTitle:"Titre de la vidéo",description:"Description",videoLanguage:"Langue de la vidéo",
-  thumbnail:"Miniature",videoFile:"Fichier vidéo",sendReview:"Publier pour examen",
-  editVideo:"Modifier la vidéo",thumbnailNote:"Laissez vide pour conserver la miniature actuelle.",
-  saveChanges:"Enregistrer",edit:"Modifier la vidéo",changeThumbnail:"Changer la miniature",
-  delete:"Supprimer définitivement",statusPending:"En attente",statusApproved:"Approuvée",
-  statusRejected:"Refusée",views:"vues",followers:"Abonnés",approvedVideos:"Vidéos approuvées",
-  channelName:"Nom de la chaîne",channelDescription:"Description de la chaîne",channelImage:"Image de la chaîne",
-  bannerImage:"Bannière",saveChannel:"Enregistrer les modifications",monetization:"Monétisation",
-  monetizationInfo:"Vous pouvez envoyer une demande de vérification. Les chiffres ne garantissent aucun paiement.",
-  monetizationLimit:"Repère suggéré : 100 abonnés et 1 000 vues approuvées.",
-  note:"Note facultative",sendRequest:"Envoyer la demande",myVideos:"Mes vidéos",
-  noVideos:"Vous n'avez pas encore publié de vidéos.",loading:"Chargement...",
-  noContent:"Aucune vidéo publiée.",loginFirst:"Veuillez vous connecter.",
-  play:"▶ Lire la vidéo",channel:"Chaîne",watch:"Regarder",approve:"Approuver",
-  reject:"Refuser",adminNote:"Note de l'administration",noRequests:"Aucune demande.",
-  noPending:"Aucune vidéo en attente.",notAllowed:"Vous ne pouvez pas modifier cette vidéo.",
-  deleteConfirm:"Voulez-vous vraiment supprimer cette vidéo définitivement ?",
-  deleted:"Vidéo et miniature supprimées.",saved:"Modifications enregistrées.",
-  uploadImage:"Téléverser l'image",uploadBanner:"Téléverser la bannière",loginRequired:"Connectez-vous pour voir votre chaîne.",
-  signup:"Créer un compte",switchLogin:"J'ai déjà un compte",createAccount:"Créer un compte",
-  enterEmail:"Entrez votre e-mail et votre mot de passe.",enterUsername:"Entrez un nom d'utilisateur.",
-  checkEmail:"Compte créé. Vérifiez votre e-mail.",loadingVideos:"Chargement des vidéos...",
-  error:"Erreur : ",reviewSent:"Vidéo envoyée pour examen.",requestSent:"Demande envoyée.",
-  requestExists:"Vous avez déjà une demande en attente.",editTitle:"Modifier le titre et la description",
-  chooseImage:"Choisissez une image valide.",save:"Enregistrer",cancel:"Annuler",channelStats:"Statistiques"
- }
-};
-
-function t(key){
- return translations[currentLanguage]?.[key]||translations.en[key]||key;
-}
-
-function changeLanguage(lang){
- currentLanguage=lang;
- const rtl=lang==="ar";
- document.documentElement.lang=lang;
- document.documentElement.dir=rtl?"rtl":"ltr";
- applyTranslations();
- renderVideos();
- if(! $("channelPage").classList.contains("hidden"))loadChannel();
- if(!$("adminPage").classList.contains("hidden"))loadAdmin();
-}
-
-function applyTranslations(){
- document.querySelectorAll("[data-i]").forEach(el=>{
-  const key=el.dataset.i;
-  if(t(key))el.textContent=t(key);
- });
- document.querySelectorAll("[data-ph]").forEach(el=>{
-  el.placeholder=t(el.dataset.ph);
- });
- $("authTitle").textContent=authMode==="login"?t("login"):t("signup");
- $("authSubmit").textContent=authMode==="login"?t("login"):t("createAccount");
- $("switchAuth").textContent=authMode==="login"?t("signup"):t("switchLogin");
-}
-
-/* General helpers */
-const $=id=>document.getElementById(id);
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let currentProfile = null;
+let currentChannel = null;
+let videos = [];
+let authMode = "login";
+let activeVideo = null;
 
 function msg(id,text,error=false){
  const el=$(id);
  if(!el)return;
- el.textContent=text;
- el.style.color=error?"#e04455":"var(--text)";
+ el.textContent=text||"";
+ el.className=error?"message error":"message";
 }
-
 function escapeHTML(value){
  return String(value??"").replace(/[&<>"']/g,c=>({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[c]);
+ }[c]));
 }
-function escapeAttr(value){return escapeHTML(value);}
-
-function statusText(status){
- if(status==="pending")return t("statusPending");
- if(status==="approved")return t("statusApproved");
- if(status==="rejected")return t("statusRejected");
- return status||"";
-}
-
-function closeModal(id){$(id).classList.add("hidden");}
-function openAuth(){$("authModal").classList.remove("hidden");}
-function openUpload(){
- if(!currentUser){openAuth();return;}
- $("uploadModal").classList.remove("hidden");
-}
-function toggleTheme(){document.body.classList.toggle("light");}
-
+function closeModal(id){$(id).classList.remove("show")}
+function openModal(id){$(id).classList.add("show")}
+function toggleTheme(){document.body.classList.toggle("light")}
 function showPage(page){
- ["homePage","channelPage","adminPage","advertisePage"].forEach(id=>{
-  const section=$(id);
-  if(section)section.classList.add("hidden");
- });
-
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
  const target=$(page+"Page");
- if(target)target.classList.remove("hidden");
-
- if(page==="channel")loadChannel();
+ if(target)target.classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ if(page==="home")$("navHome").classList.add("active");
  if(page==="admin")loadAdmin();
-
+ if(page==="channel")loadChannel();
+ if(page==="home")loadVideos();
  window.scrollTo(0,0);
 }
-async function submitAdvertiserRequest(event){
- event.preventDefault();
-
- if(!currentUser){
-  openAuth();
-  return;
- }
-
- const button=$("advertiserSubmit");
- const message=$("advertiserMessage");
-
- button.disabled=true;
- message.textContent="جارٍ إرسال طلبك...";
-
- try{
-  const {error}=await db
-   .from("advertiser_requests")
-   .insert({
-    user_id:currentUser.id,
-    company_name:$("companyName").value.trim(),
-    contact_name:$("contactName").value.trim(),
-    email:$("advertiserEmail").value.trim() || currentUser.email,
-    website:$("advertiserWebsite").value.trim() || null,
-    ad_format:$("adFormat").value,
-    placement:$("adPlacement").value,
-    budget:$("adBudget").value.trim() || null,
-    message:$("adMessage").value.trim() || null
-   });
-
-  if(error)throw error;
-
-  message.textContent="تم إرسال طلبك بنجاح! سيقوم فريق AmazPlay بمراجعته.";
-  $("advertiserForm").reset();
-
- }catch(error){
-  console.error("Advertiser request error:",error);
-  message.textContent="تعذر إرسال الطلب: "+error.message;
- }finally{
-  button.disabled=false;
- }
- }
-async function submitAuth(){
- const email=$("authEmail").value.trim();
- const password=$("authPassword").value;
- if(!email||!password){msg("authMessage",t("enterEmail"),true);return;}
- $("authSubmit").disabled=true;
- try{
-  let result;
-  if(authMode==="login"){
-   result=await db.auth.signInWithPassword({email,password});
-  }else{
-   const username=$("signupName").value.trim();
-   if(!username)throw new Error(t("enterUsername"));
-   result=await db.auth.signUp({
-    email,password,options:{data:{username}}
-   });
-  }
-  if(result.error)throw result.error;
-  if(authMode==="signup"&&!result.data.session){
-   msg("authMessage",t("checkEmail"));
-  }else{
-   closeModal("authModal");
-   await refreshAuth();
-  }
- }catch(e){msg("authMessage",e.message,true);}
- finally{$("authSubmit").disabled=false;}
+function openAuth(){
+ if(currentUser){showPage("channel");return}
+ authMode="login";updateAuthUI();openModal("authModal");
 }
-
+function switchAuthMode(){
+ authMode=authMode==="login"?"signup":"login";
+ updateAuthUI();
+}
+function updateAuthUI(){
+ $("authTitle").textContent=authMode==="login"?"تسجيل الدخول":"إنشاء حساب جديد";
+ $("authSubmit").textContent=authMode==="login"?"دخول":"إنشاء الحساب";
+ $("signupFields").classList.toggle("hidden",authMode!=="signup");
+ $("signupName").required=authMode==="signup";
+ msg("authMessage","");
+}
+function setUserUI(){
+ $("navLogout").classList.toggle("hidden",!currentUser);
+ $("navAdmin").classList.toggle("hidden",!currentProfile||currentProfile.role!=="admin");
+}
+async function getProfile(){
+ if(!currentUser){currentProfile=null;return}
+ const {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(error){console.error(error);currentProfile=null;return}
+ currentProfile=data;
+}
+async function ensureProfile(){
+ if(!currentUser)return;
+ const {data}=await db.from("profiles").select("id").eq("id",currentUser.id).maybeSingle();
+ if(!data){
+  await db.from("profiles").insert({
+   id:currentUser.id,
+   username:currentUser.user_metadata?.username||currentUser.email?.split("@")[0]||"user"
+  });
+ }
+ await getProfile();
+}
 async function logout(){
  await db.auth.signOut();
- currentUser=null;
- currentChannel=null;
- await refreshAuth();
- showPage("home");
+ currentUser=null;currentProfile=null;currentChannel=null;
+ setUserUI();showPage("home");
 }
 
-async function refreshAuth(){
- const {data,error}=await db.auth.getSession();
- if(error)console.error(error);
- currentUser=data?.session?.user||null;
- $("authButton").classList.toggle("hidden",!!currentUser);
- $("logoutButton").classList.toggle("hidden",!currentUser);
+/* المصادقة */
+$("authForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const button=$("authSubmit");
+ button.disabled=true;
+ msg("authMessage","يرجى الانتظار...");
+ try{
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value;
+  let result;
+  if(authMode==="signup"){
+   result=await db.auth.signUp({
+    email,password,
+    options:{data:{username:$("signupName").value.trim()}}
+   });
+  }else{
+   result=await db.auth.signInWithPassword({email,password});
+  }
+  if(result.error)throw result.error;
+  if(result.data.user&&!result.data.session&&authMode==="signup"){
+   msg("authMessage","تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتفعيل الحساب.");
+   return;
+  }
+  currentUser=result.data.user;
+  await ensureProfile();
+  setUserUI();
+  closeModal("authModal");
+  showPage("home");
+ }catch(error){msg("authMessage",error.message,true)}
+ finally{button.disabled=false}
+});
 
- if(currentUser){
-  const {data:p}=await db.from("profiles")
-   .select("role").eq("id",currentUser.id).maybeSingle();
-  $("adminNav").classList.toggle("hidden",p?.role!=="admin");
- }else{
-  $("adminNav").classList.add("hidden");
- }
-}
-
-/* Channel */
+/* القنوات */
 async function ensureChannel(){
  if(!currentUser)return null;
- const {data,error}=await db.from("channels")
-  .select("*").eq("user_id",currentUser.id).maybeSingle();
+ const {data,error}=await db.from("channels").select("*").eq("user_id",currentUser.id).maybeSingle();
  if(error)throw error;
  if(data)return data;
-
- const username=currentUser.user_metadata?.username||
-  currentUser.email.split("@")[0];
-
- const {data:created,error:createError}=await db.from("channels")
-  .insert({
-   user_id:currentUser.id,
-   name:username,
-   description:"Welcome to my channel"
-  }).select().single();
-
- if(createError)throw createError;
- return created;
+ const name=currentProfile?.username||currentUser.user_metadata?.username||currentUser.email.split("@")[0];
+ const result=await db.from("channels").insert({
+  user_id:currentUser.id,name,description:"مرحباً بكم في قناتي"
+ }).select().single();
+ if(result.error)throw result.error;
+ return result.data;
 }
-
+async function loadChannel(){
+ if(!currentUser){
+  $("channelContent").innerHTML='<div class="panel">سجل الدخول أولاً لعرض قناتك. <button onclick="openAuth()">تسجيل الدخول</button></div>';
+  return;
+ }
+ $("channelContent").innerHTML='<div class="panel">جاري تحميل القناة...</div>';
+ try{
+  currentChannel=await ensureChannel();
+  const {data:myVideos,error}=await db.from("videos").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false});
+  if(error)throw error;
+  const {count:followerCount}=await db.from("follows").select("*",{count:"exact",head:true}).eq("channel_id",currentChannel.id);
+  const totalViews=(myVideos||[]).reduce((sum,v)=>sum+Number(v.views||0),0);
+  const approved=(myVideos||[]).filter(v=>v.status==="approved");
+  const channelImage=currentChannel.channel_image_url||"";
+  const banner=currentChannel.banner_url||"";
+  $("channelContent").innerHTML=`
+   <div class="panel">
+    <img class="banner" src="${escapeHTML(banner||"https://placehold.co/1200x250/26364b/ffffff?text=AmazPlay")}" alt="غلاف القناة">
+    <div class="row" style="margin-top:12px">
+     <img class="avatar" src="${escapeHTML(channelImage||"https://placehold.co/100x100/34445c/ffffff?text=AP")}" alt="صورة القناة">
+     <div><h2>${escapeHTML(currentChannel.name)}</h2><p class="muted">${escapeHTML(currentChannel.description||"")}</p></div>
+    </div>
+    <div class="stat-grid">
+     <div class="stat">المشاهدات<strong>${totalViews}</strong></div>
+     <div class="stat">المتابعون<strong>${followerCount||0}</strong></div>
+     <div class="stat">الفيديوهات المقبولة<strong>${approved.length}</strong></div>
+    </div>
+   </div>
+   <div class="panel">
+    <h3>تعديل القناة</h3>
+    <label>اسم القناة</label><input id="channelName" value="${escapeHTML(currentChannel.name)}">
+    <label>وصف القناة</label><textarea id="channelDescription">${escapeHTML(currentChannel.description||"")}</textarea>
+    <button onclick="saveChannel()">حفظ بيانات القناة</button>
+    <hr>
+    <label>صورة القناة</label><input id="channelAvatarFile" type="file" accept="image/*">
+    <button class="secondary" onclick="uploadChannelImage('channelAvatarFile','channel_image_url')">رفع الصورة</button>
+    <label>غلاف القناة</label><input id="channelBannerFile" type="file" accept="image/*">
+    <button class="secondary" onclick="uploadChannelImage('channelBannerFile','banner_url')">رفع الغلاف</button>
+    <div id="channelMessage"></div>
+   </div>
+   <div class="panel">
+    <h3>تحقيق الدخل</h3>
+    <p>الشروط: 1000 مشاهدة على الأقل و100 متابع على الأقل.</p>
+    <p>مشاهداتك: ${totalViews} / 1000 — متابعوك: ${followerCount||0} / 100</p>
+    <button onclick="submitMonetization()" ${totalViews<1000||(followerCount||0)<100?"disabled":""}>طلب تحقيق الدخل</button>
+    <div id="monetizationMessage"></div>
+   </div>
+   <h3>فيديوهاتي</h3>
+   <div class="grid">${(myVideos||[]).map(v=>`
+    <div class="panel">
+     <img class="thumb" src="${escapeHTML(v.thumbnail_url||"https://placehold.co/400x225/26364b/ffffff?text=AmazPlay")}">
+     <h3>${escapeHTML(v.title)}</h3>
+     <p class="muted">الحالة: ${statusArabic(v.status)} — المشاهدات: ${Number(v.views||0)}</p>
+     <div class="row">
+      <button class="secondary small-btn" onclick="editVideo('${v.id}')">تعديل</button>
+      <button class="danger small-btn" onclick="deleteVideo('${v.id}')">حذف</button>
+     </div>
+    </div>`).join("")||"<p>لم ترفع أي فيديو بعد.</p>"}</div>`;
+ }catch(error){
+  $("channelContent").innerHTML=`<div class="panel">تعذر تحميل القناة: ${escapeHTML(error.message)}</div>`;
+ }
+}
+async function saveChannel(){
+ try{
+  const {error}=await db.from("channels").update({
+   name:$("channelName").value.trim(),
+   description:$("channelDescription").value.trim()
+  }).eq("id",currentChannel.id).eq("user_id",currentUser.id);
+  if(error)throw error;
+  msg("channelMessage","تم حفظ بيانات القناة بنجاح");
+  loadChannel();
+ }catch(e){msg("channelMessage",e.message,true)}
+}
 async function uploadChannelImage(inputId,field){
  const file=$(inputId).files[0];
- if(!file||!currentUser||!currentChannel)return;
- if(!file.type.startsWith("image/")){
-  alert(t("chooseImage"));return;
- }
+ if(!file)return alert("اختر صورة أولاً");
+ if(!file.type.startsWith("image/"))return alert("الملف يجب أن يكون صورة");
  try{
-  const ext=(file.name.split(".").pop()||"jpg").replace(/[^a-zA-Z0-9]/g,"");
-  const path=currentUser.id+"/"+field+"_"+Date.now()+"."+ext;
-  const {error}=await db.storage.from("channel-assets")
-   .upload(path,file,{upsert:false,contentType:file.type});
-  if(error)throw error;
-
+  const path=`${currentUser.id}/${Date.now()}-${safeName(file.name)}`;
+  const {error:uploadError}=await db.storage.from("channel-assets").upload(path,file,{upsert:true});
+  if(uploadError)throw uploadError;
   const {data}=db.storage.from("channel-assets").getPublicUrl(path);
-  const update={};
-  update[field]=data.publicUrl;
-
-  const {error:updateError}=await db.from("channels")
-   .update(update).eq("id",currentChannel.id);
-  if(updateError)throw updateError;
-
-  await loadChannel();
- }catch(e){alert("Upload error: "+e.message);}
+  const {error}=await db.from("channels").update({[field]:data.publicUrl}).eq("id",currentChannel.id).eq("user_id",currentUser.id);
+  if(error)throw error;
+  alert("تم تحديث الصورة بنجاح");
+  loadChannel();
+ }catch(e){alert("حدث خطأ: "+e.message)}
 }
 
-async function saveChannel(){
- if(!currentChannel)return;
- const name=$("channelName").value.trim();
- const description=$("channelDescription").value.trim();
- if(!name){alert("Enter a channel name.");return;}
-
- const {error}=await db.from("channels")
-  .update({name,description}).eq("id",currentChannel.id);
- if(error){alert(error.message);return;}
- alert(t("saved"));
- await loadChannel();
+/* رفع الفيديو */
+function safeName(name){return String(name).replace(/[^a-zA-Z0-9._-]/g,"_")}
+function openUpload(){
+ if(!currentUser){openAuth();return}
+ $("uploadForm").reset();msg("uploadMessage","");
+ openModal("uploadModal");
 }
-
-/* Video listing */
-async function loadVideos(){
- msg("homeMessage",t("loadingVideos"));
- const {data,error}=await db.from("videos")
-  .select("*").eq("status","approved")
-  .order("created_at",{ascending:false}).limit(100);
-
- if(error){
-  msg("homeMessage",t("error")+error.message,true);
-  return;
- }
-
- allVideos=data||[];
- const ids=[...new Set(allVideos.map(v=>v.channel_id).filter(Boolean))];
- let channels={};
-
- if(ids.length){
-  const result=await db.from("channels")
-   .select("id,name,channel_image_url").in("id",ids);
-  if(!result.error){
-   (result.data||[]).forEach(c=>channels[c.id]=c);
-  }
- }
-
- allVideos=allVideos.map(v=>({...v,channel:channels[v.channel_id]}));
- renderVideos();
-}
-
-function filterVideos(value){
- languageFilter=value;
- renderVideos();
-}
-
-function renderVideos(){
- const search=($("searchInput").value||"").toLowerCase();
-
- const list=allVideos.filter(v=>
-  (languageFilter==="all"||v.language===languageFilter)&&
-  ((v.title||"").toLowerCase().includes(search)||
-   (v.description||"").toLowerCase().includes(search))
- );
-
- const grid=$("videoGrid");
- grid.innerHTML="";
-
- if(!list.length){
-  msg("homeMessage",t("noContent"));
-  return;
- }
-
- msg("homeMessage","");
-
- list.forEach(v=>{
-  const card=document.createElement("article");
-  card.className="card";
-card.dataset.videoId=String(v.id);
-  const media=document.createElement("div");
-
-  function showPlayer(){
-
-     window.history.pushState({}, "", window.location.pathname + "?video=" + encodeURIComponent(v.id));                                  
-   const player=document.createElement("video");
-   player.className="video-box";
-   player.controls=true;
-   player.preload="metadata";
-   player.playsInline=true;
-   player.src=v.video_url;
-   media.replaceChildren(player);
-   player.play().catch(()=>{});
-  }
-
-  if(v.thumbnail_url){
-   const image=document.createElement("img");
-   image.className="video-box";
-   image.src=v.thumbnail_url;
-   image.alt=v.title||"Video thumbnail";
-   image.style.cursor="pointer";
-   image.addEventListener("click",showPlayer);
-   image.onerror=()=>{
-    const fallback=document.createElement("div");
-    fallback.className="video-box";
-    fallback.textContent=t("play");
-    fallback.style.cursor="pointer";
-    fallback.addEventListener("click",showPlayer);
-    image.replaceWith(fallback);
-   };
-   media.append(image);
-  }else{
-   const fallback=document.createElement("div");
-   fallback.className="video-box";
-   fallback.textContent=t("play");
-   fallback.style.cursor="pointer";
-   fallback.addEventListener("click",showPlayer);
-   media.append(fallback);
-  }
-
-  const body=document.createElement("div");
-  body.className="card-body";
-
-  const title=document.createElement("h3");
-  title.textContent=v.title||"Untitled video";
-
-  const channel=document.createElement("p");
-  channel.className="muted";
-  channel.textContent=v.channel?.name||"AmazPlay Creator";
-
-  const views=document.createElement("p");
-  views.className="muted";
-  views.textContent=Number(v.views||0).toLocaleString()+" "+t("views");
-
-  body.append(title,channel,views);
-  card.append(media,body);
-  grid.append(card);
- });
-}
-
-/* Upload a new video */
-async function uploadVideo(){
- if(!currentUser){openAuth();return;}
-
- const title=$("videoTitle").value.trim();
- const description=$("videoDescription").value.trim();
+$("uploadForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!currentUser){openAuth();return}
+ const button=$("uploadButton");
  const file=$("videoFile").files[0];
- const thumbnailFile=$("thumbnailFile").files[0];
-
- if(!title||!file){
-  msg("uploadMessage","Enter a title and select a video file.",true);
-  return;
- }
- if(!file.type.startsWith("video/")){
-  msg("uploadMessage","Invalid video file.",true);return;
- }
- if(thumbnailFile&&!thumbnailFile.type.startsWith("image/")){
-  msg("uploadMessage",t("chooseImage"),true);return;
- }
-
- $("uploadButton").disabled=true;
- msg("uploadMessage","Uploading... Please keep this page open.");
-
- let uploadedPaths=[];
-
+ const thumb=$("thumbnailFile").files[0];
+ if(!file)return msg("uploadMessage","اختر ملف الفيديو",true);
+ if(!file.type.startsWith("video/"))return msg("uploadMessage","الملف المختار ليس فيديو",true);
+ button.disabled=true;button.textContent="جاري الرفع...";
+ let uploadedVideoPath=null,uploadedThumbPath=null,inserted=false;
  try{
   const channel=await ensureChannel();
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-  const path=currentUser.id+"/"+Date.now()+"_"+safeName;
-
-  const {error:storageError}=await db.storage.from("videos")
-   .upload(path,file,{contentType:file.type,upsert:false});
-  if(storageError)throw storageError;
-  uploadedPaths.push(path);
-
-  const {data:publicData}=db.storage.from("videos").getPublicUrl(path);
+  const base=`${currentUser.id}/${Date.now()}`;
+  uploadedVideoPath=`${base}-${safeName(file.name)}`;
+  const {error:videoUploadError}=await db.storage.from("videos").upload(uploadedVideoPath,file,{upsert:false});
+  if(videoUploadError)throw videoUploadError;
+  const {data:videoUrlData}=db.storage.from("videos").getPublicUrl(uploadedVideoPath);
   let thumbnailUrl=null;
-
-  if(thumbnailFile){
-   const imageName=thumbnailFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-   const imagePath=currentUser.id+"/thumbnails/"+Date.now()+"_"+imageName;
-
-   const {error:imageError}=await db.storage.from("videos")
-    .upload(imagePath,thumbnailFile,{
-     contentType:thumbnailFile.type,upsert:false
-    });
-   if(imageError)throw imageError;
-   uploadedPaths.push(imagePath);
-
-   const {data:imageData}=db.storage.from("videos").getPublicUrl(imagePath);
-   thumbnailUrl=imageData.publicUrl;
+  if(thumb){
+   uploadedThumbPath=`${base}-thumb-${safeName(thumb.name)}`;
+   const {error:thumbError}=await db.storage.from("videos").upload(uploadedThumbPath,thumb,{upsert:false});
+   if(thumbError)throw thumbError;
+   thumbnailUrl=db.storage.from("videos").getPublicUrl(uploadedThumbPath).data.publicUrl;
   }
-
   const {error:insertError}=await db.from("videos").insert({
    user_id:currentUser.id,
    channel_id:channel.id,
-   title,description,
-   video_url:publicData.publicUrl,
-   thumbnail_url:thumbnailUrl,
-   language:$("videoLanguage").value,
-   status:"pending",
-   views:0
-  });
-
-  if(insertError)throw insertError;
-
-  msg("uploadMessage",t("reviewSent"));
-  $("videoTitle").value="";
-  $("videoDescription").value="";
-  $("videoFile").value="";
-  $("thumbnailFile").value="";
-
-  await loadChannel();
-
- }catch(e){
-  if(uploadedPaths.length){
-   await db.storage.from("videos").remove(uploadedPaths);
-  }
-  msg("uploadMessage",t("error")+e.message,true);
- }finally{
-  $("uploadButton").disabled=false;
- }
-}
-
-/* Extract a file path from a public Storage URL */
-function getStoragePath(url,bucket){
- if(!url)return null;
- const marker="/storage/v1/object/public/"+bucket+"/";
- const index=url.indexOf(marker);
- if(index===-1)return null;
- try{
-  return decodeURIComponent(url.substring(index+marker.length).split("?")[0]);
- }catch(e){return null;}
-}
-
-/* Edit video metadata and thumbnail without uploading video again */
-function openEditVideo(video){
- if(!currentUser||video.user_id!==currentUser.id){
-  alert(t("notAllowed"));return;
- }
- $("editVideoId").value=video.id;
- $("editTitle").value=video.title||"";
- $("editDescription").value=video.description||"";
- $("editThumbnail").value="";
- msg("editMessage","");
- $("editModal").classList.remove("hidden");
-}
-
-async function saveVideoChanges(){
- if(!currentUser)return;
-
- const id=$("editVideoId").value;
- const title=$("editTitle").value.trim();
- const description=$("editDescription").value.trim();
- const image=$("editThumbnail").files[0];
-
- if(!title){
-  msg("editMessage","Enter a video title.",true);return;
- }
- if(image&&!image.type.startsWith("image/")){
-  msg("editMessage",t("chooseImage"),true);return;
- }
-
- const button=$("saveVideoButton");
- button.disabled=true;
- msg("editMessage","Saving changes...");
-
- let newImagePath=null;
-
- try{
-  const video=allChannelVideos.find(v=>String(v.id)===String(id));
-  if(!video)throw new Error("Video not found.");
-
-  const changes={title,description};
-
-  if(image){
-   const ext=(image.name.split(".").pop()||"jpg").replace(/[^a-zA-Z0-9]/g,"");
-   newImagePath=currentUser.id+"/thumbnails/"+Date.now()+"_edit."+ext;
-
-   const {error:uploadError}=await db.storage.from("videos")
-    .upload(newImagePath,image,{
-     upsert:false,contentType:image.type
-    });
-   if(uploadError)throw uploadError;
-
-   const {data:imageData}=db.storage.from("videos").getPublicUrl(newImagePath);
-   changes.thumbnail_url=imageData.publicUrl;
-  }
-
-  const {data:updated,error}=await db.from("videos")
-   .update(changes)
-   .eq("id",id)
-   .eq("user_id",currentUser.id)
-   .select("id");
-
-  if(error)throw error;
-  if(!updated||!updated.length)throw new Error("Update not permitted.");
-
-  if(image&&video.thumbnail_url){
-   const oldPath=getStoragePath(video.thumbnail_url,"videos");
-   if(oldPath&&oldPath.startsWith(currentUser.id+"/")){
-    await db.storage.from("videos").remove([oldPath]);
-   }
-  }
-
-  closeModal("editModal");
-  alert(t("saved"));
-  await loadChannel();
-  await loadVideos();
-
- }catch(e){
-  if(newImagePath){
-   await db.storage.from("videos").remove([newImagePath]);
-  }
-  msg("editMessage",t("error")+e.message,true);
- }finally{
-  button.disabled=false;
- }
-}
-
-/* Delete a video permanently */
-async function deleteMyVideo(video){
- if(!currentUser)return;
- if(video.user_id!==currentUser.id){
-  alert(t("notAllowed"));return;
- }
- if(!confirm(t("deleteConfirm")))return;
-
- try{
-  const paths=[video.video_url,video.thumbnail_url]
-   .map(url=>getStoragePath(url,"videos"))
-   .filter(path=>path&&path.startsWith(currentUser.id+"/"));
-
-  const {data:deleted,error}=await db.from("videos")
-   .delete()
-   .eq("id",video.id)
-   .eq("user_id",currentUser.id)
-   .select("id");
-
-  if(error)throw error;
-  if(!deleted||!deleted.length){
-   throw new Error("Delete not permitted. Check database policies.");
-  }
-
-  if(paths.length){
-   const {error:storageError}=await db.storage.from("videos").remove(paths);
-   if(storageError){
-    alert("The video record was deleted, but some files could not be removed: "+storageError.message);
-   }
-  }
-
-  alert(t("deleted"));
-  await loadChannel();
-  await loadVideos();
-
- }catch(e){
-  alert(t("error")+e.message);
- }
-}
-
-/* Channel page */
-let allChannelVideos=[];
-
-async function loadChannel(){
- if(!currentUser){
-  $("channelContent").innerHTML='<div class="message">'+t("loginRequired")+'</div>';
-  return;
- }
-
- $("channelContent").innerHTML='<div class="message">'+t("loading")+'</div>';
-
- try{
-  currentChannel=await ensureChannel();
-
-  const [videosRes,followersRes,requestRes]=await Promise.all([
-   db.from("videos").select("*")
-    .eq("channel_id",currentChannel.id)
-    .order("created_at",{ascending:false}),
-   db.from("follows").select("*",{count:"exact",head:true})
-    .eq("channel_id",currentChannel.id),
-   db.from("monetization_requests").select("*")
-    .eq("user_id",currentUser.id)
-    .order("created_at",{ascending:false}).limit(1)
-  ]);
-
-  if(videosRes.error)throw videosRes.error;
-
-  const videos=videosRes.data||[];
-  allChannelVideos=videos;
-
-  const approved=videos.filter(v=>v.status==="approved");
-  const views=approved.reduce((sum,v)=>sum+Number(v.views||0),0);
-  const followers=followersRes.error?null:(followersRes.count||0);
-  const request=requestRes.data?.[0];
-
-  const avatar=currentChannel.channel_image_url||"";
-  const banner=currentChannel.banner_url||"";
-
-  $("channelContent").innerHTML=`
-   <div class="panel">
-    ${banner?`<img class="banner" src="${escapeAttr(banner)}" alt="Channel banner">`:""}
-    <div class="row" style="margin-top:12px">
-     ${avatar?`<img class="avatar" src="${escapeAttr(avatar)}" alt="Channel image">`:""}
-     <div>
-      <h2>${escapeHTML(currentChannel.name)}</h2>
-      <p class="muted">${escapeHTML(currentChannel.description||"")}</p>
-     </div>
-    </div>
-   </div>
-
-   <div class="panel">
-    <h3>${t("channelStats")}</h3>
-    <label>${t("channelName")}</label>
-    <input id="channelName" value="${escapeAttr(currentChannel.name||"")}">
-    <label>${t("channelDescription")}</label>
-    <textarea id="channelDescription">${escapeHTML(currentChannel.description||"")}</textarea>
-
-    <label>${t("channelImage")}</label>
-    <input type="file" id="avatarFile" accept="image/*">
-    <button class="secondary" onclick="uploadChannelImage('avatarFile','channel_image_url')">${t("uploadImage")}</button>
-
-    <label>${t("bannerImage")}</label>
-    <input type="file" id="bannerFile" accept="image/*">
-    <button class="secondary" onclick="uploadChannelImage('bannerFile','banner_url')">${t("uploadBanner")}</button>
-
-    <button onclick="saveChannel()">${t("saveChannel")}</button>
-   </div>
-
-   <div class="stat-grid">
-    <div class="stat">${t("approvedVideos")}<strong>${approved.length}</strong></div>
-    <div class="stat">${t("views")}<strong>${views.toLocaleString()}</strong></div>
-    <div class="stat">${t("followers")}<strong>${followers===null?"—":followers.toLocaleString()}</strong></div>
-   </div>
-
-   <div class="panel">
-    <h3>${t("monetization")}</h3>
-    <p class="muted">${t("monetizationInfo")}</p>
-    <p>${t("monetizationLimit")}</p>
-    ${request?`
-     <p>Status: <b>${statusText(request.status)}</b></p>
-     <p class="muted">${escapeHTML(request.review_note||"")}</p>
-    `:""}
-    <label>${t("note")}</label>
-    <textarea id="monetizationNote"></textarea>
-    <button onclick="submitMonetization(${views},${followers||0})">${t("sendRequest")}</button>
-    <div id="monetizationMessage" class="message"></div>
-   </div>
-
-   <div class="panel">
-    <h3>${t("myVideos")}</h3>
-    <div id="myVideos"></div>
-   </div>
-  `;
-
-  const myList=$("myVideos");
-
-  if(!videos.length){
-   myList.textContent=t("noVideos");
-  }
-
-  videos.forEach(v=>{
-   const item=document.createElement("div");
-   item.className="message channel-video";
-
-   const info=document.createElement("div");
-   info.className="channel-video-info";
-
-   const title=document.createElement("strong");
-   title.textContent=v.title||"Untitled video";
-
-   const details=document.createElement("p");
-   details.className="muted";
-   details.textContent=statusText(v.status)+" • "+Number(v.views||0).toLocaleString()+" "+t("views");
-
-   info.append(title,details);
-
-   const menu=document.createElement("details");
-   menu.className="video-menu";
-
-   const summary=document.createElement("summary");
-   summary.textContent="⋮";
-   summary.setAttribute("aria-label","Video settings");
-
-   const menuContent=document.createElement("div");
-   menuContent.className="menu-content";
-
-   const editButton=document.createElement("button");
-   editButton.textContent="✎ "+t("edit");
-   editButton.onclick=()=>{
-    menu.open=false;
-    openEditVideo(v);
-   };
-
-   const deleteButton=document.createElement("button");
-   deleteButton.textContent="× "+t("delete");
-   deleteButton.onclick=()=>{
-    menu.open=false;
-    deleteMyVideo(v);
-   };
-
-   menuContent.append(editButton,deleteButton);
-   menu.append(summary,menuContent);
-   item.append(info,menu);
-   myList.append(item);
-  });
-
- }catch(e){
-  $("channelContent").innerHTML=
-   '<div class="message">'+t("error")+escapeHTML(e.message)+'</div>';
- }
-}
-
-/* Monetization request */
-async function submitMonetization(views,followers){
- if(!currentUser)return;
-
- const button=document.querySelector("#channelContent button[onclick^='submitMonetization']");
- if(button)button.disabled=true;
-
- try{
-  const {data:existing,error:checkError}=await db.from("monetization_requests")
-   .select("id,status")
-   .eq("user_id",currentUser.id)
-   .eq("status","pending")
-   .limit(1);
-
-  if(checkError)throw checkError;
-  if(existing&&existing.length){
-   msg("monetizationMessage",t("requestExists"),true);
-   return;
-  }
-
-  const note=$("monetizationNote")?.value.trim()||"";
-
-  const {error}=await db.from("monetization_requests").insert({
-   user_id:currentUser.id,
-   total_views:Number(views)||0,
-   followers_count:Number(followers)||0,
-   status:"pending",
-   review_note:note
-  });
-
-  if(error)throw error;
-
-  msg("monetizationMessage",t("requestSent"));
-  await loadChannel();
-
- }catch(e){
-  msg("monetizationMessage",t("error")+e.message,true);
- }finally{
-  if(button)button.disabled=false;
- }
-}
-
-/* Admin dashboard */
-async function loadAdmin(){
- const {data:profile,error:profileError}=await db.from("profiles")
-  .select("role").eq("id",currentUser?.id||"").maybeSingle();
-
- if(profileError||profile?.role!=="admin"){
-  $("adminPage").innerHTML="<h2>Access denied.</h2>";
-  return;
- }
-const [usersRes,videosRes,requestsRes,pendingRes,advertiserRes]=await Promise.all([
- db.from("profiles").select("*",{count:"exact",head:true}),
- db.from("videos").select("*",{count:"exact",head:true}).eq("status","approved"),
- db.from("monetization_requests").select("*").order("created_at",{ascending:false}),
- db.from("videos").select("*").eq("status","pending").order("created_at",{ascending:false}),
- db.from("advertiser_requests").select("*").order("created_at",{ascending:false})
-]);$("statPending").textContent=requestsRes.error?"—":
-  requests.filter(r=>r.status==="pending").length.toLocaleString();
-
- if(usersRes.error||videosRes.error){
-  msg("adminMessage","Some statistics could not be loaded.",true);
- }else if(requestsRes.error){
-  msg("adminMessage",requestsRes.error.message,true);
- }else{
-  msg("adminMessage","Dashboard updated.");
- }
-
- renderRequests(requests,requestsRes.error);
- renderPendingVideos(pendingRes.data||[],pendingRes.error);
-}
-
-function renderRequests(requests,error){
- renderAdvertiserRequests(advertiserRes.data||[],advertiserRes.error);
- const list=$("requestList");
- list.innerHTML="";
-
- if(error){list.textContent="Could not load requests.";return;}
- if(!requests.length){list.textContent=t("noRequests");return;}
-
- requests.forEach(r=>{
-  const box=document.createElement("div");
-  box.className="panel";
-
-  const info=document.createElement("p");
-  info.textContent="User: "+r.user_id+
-   " | Views: "+r.total_views+
-   " | Followers: "+r.followers_count+
-   " | Status: "+statusText(r.status);
-
-  const note=document.createElement("textarea");
-  note.placeholder=t("adminNote");
-  note.value=r.review_note||"";
-
-  const approve=document.createElement("button");
-  approve.textContent=t("approve");
-  approve.onclick=()=>reviewRequest(r.id,"approved",note.value);
-
-  const reject=document.createElement("button");
-  reject.textContent=t("reject");
-  reject.className="danger";
-  reject.onclick=()=>reviewRequest(r.id,"rejected",note.value);
-
-  box.append(info,note,approve,reject);
-  list.append(box);
- });
-}
-
-async function reviewRequest(id,status,note){
- const {error}=await db.from("monetization_requests")
-  .update({status,review_note:note}).eq("id",id);
-
- if(error){
-  msg("adminMessage",t("error")+error.message,true);
-  return;
- }
-
- msg("adminMessage","Request updated.");
- await loadAdmin();
-}
-
-function renderPendingVideos(videos,error){
- const list=$("pendingVideos");
- list.innerHTML="";
-
- if(error){list.textContent="Could not load pending videos.";return;}
- if(!videos.length){list.textContent=t("noPending");return;}
-
- videos.forEach(v=>{
-  const box=document.createElement("div");
-  box.className="panel";
-
-  const title=document.createElement("p");
-  title.textContent=v.title||"Untitled video";
-
-  const link=document.createElement("a");
-  link.href=v.video_url;
-  link.target="_blank";
-  link.rel="noopener";
-  link.textContent=t("watch");
-
-  const approve=document.createElement("button");
-  approve.textContent=t("approve");
-  approve.onclick=()=>reviewVideo(v.id,"approved");
-
-  const reject=document.createElement("button");
-  reject.textContent=t("reject");
-  reject.className="danger";
-  reject.onclick=()=>reviewVideo(v.id,"rejected");
-
-  box.append(title,link,document.createElement("br"),approve,reject);
-  list.append(box);
- });
-}
-
-async function reviewVideo(id,status){
- const {error}=await db.from("videos")
-  .update({status}).eq("id",id);
-
- if(error){
-  msg("adminMessage",t("error")+error.message,true);
-  return;
- }
-
- msg("adminMessage","Video status updated.");
- await loadAdmin();
- await loadVideos();
-}
-
-/* Authentication listener and startup */
-db.auth.onAuthStateChange((_event,session)=>{
- setTimeout(async()=>{
-  currentUser=session?.user||null;
-  await refreshAuth();
- },0);
-});
-
-function openVideoFromUrl(){
- const videoId=new URLSearchParams(location.search).get("video");
- if(!videoId)return;
-
- const card=Array.from(document.querySelectorAll(".card"))
-  .find(el=>el.dataset.videoId===videoId);
-
- if(card){
-  const trigger=card.querySelector(".video-box");
-  if(trigger)trigger.click();
- }
-}
-
-function openVideoFromUrl(){
- const videoId=new URLSearchParams(location.search).get("video");
- if(!videoId)return;
-
- const card=Array.from(document.querySelectorAll(".card"))
-  .find(el=>el.dataset.videoId===videoId);
-
- if(card){
-  const trigger=card.querySelector(".video-box");
-  if(trigger)trigger.click();
- }
-}
-
-(async function init(){
- applyTranslations();
- await refreshAuth();
- await loadVideos();
- openVideoFromUrl();
-})();
-</script>
-</body>
-</html>
+   title:$(
